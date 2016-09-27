@@ -1,0 +1,98 @@
+<style>
+    .input-group-btn{
+        top:8px;
+    }
+
+    .input-group .form-control{
+        margin-top: 15px;
+    }
+</style>
+<div class="add-item table" ng-click="addCar()">
+    <div class="add-icon ion-ios-plus-outline display-block"></div>
+    <span class="add-text display-block">新增</span>
+</div>
+<table class="data" style="text-align: center;">
+    <tr class="table-header">
+        <th class="data-th" width="8%">序号</th>
+        <th class="data-th" width="15%">车辆编号</th>
+        <th class="data-th" width="10%">车系</th>
+        <th class="data-th" width="12%">配置</th>
+        <th class="data-th" width="10%">颜色</th>
+        <th class="data-th" width="15%">入库时间</th>
+        <th class="data-th" width="10%">定价</th>
+        <th class="data-th" width="15%">操作</th>
+    </tr>
+    <tr ng-repeat="car in cars" class="editable-row">
+        <td class="data-td">
+            {{(5*(pagination.currentPage-1)+$index+1)}}
+        </td>
+        <td class="data-td">
+        <span editable-text="car.serial" e-name="serial" e-form="rowform" e-required>
+          {{ car.serial || '未设置' }}
+        </span>
+        </td>
+        <td class="data-td">
+        <span editable-select="car.line.id" e-name="line.id" e-form="rowform"
+              e-ng-options="line.id as line.name for line in lines" e-ng-change="getConfigs($data)">
+          {{ car.line.name || '未设置' }}
+        </span>
+        </td>
+        <td class="data-td">
+        <span editable-select="car.configuration.id" e-name="configuration.id" e-form="rowform"
+              e-ng-options="configuration.id as configuration.name for configuration in configs">
+          <!--{{ showConfig(car) }}-->
+            {{car.configuration.name || '未设置'}}
+        </span>
+        </td>
+        <td class="data-td">
+        <span editable-select="car.color" e-name="color.name" e-form="rowform"
+              e-ng-options="color.name as color.name for color in colors">
+          {{ car.color || '未设置'}}
+        </span>
+        </td>
+        <td class="data-td">
+        <span e-name="addTime" e-form="rowform"
+              e-datepicker-popup="yyyy-MM-dd" editable-bsdate="car.addTime"
+              e-is-open="opened.$data" e-ng-click="open($event,'$data')">
+          {{(showAddTime(car) | date:'yyyy-MM-dd') || '未设置' }}
+        </span>
+        </td>
+        <td class="data-td" style="padding-left: 10px">
+       <span editable-text="car.price" e-name="number" e-form="rowform" e-required
+             onbeforesave="checkPrice($data)">
+          {{(car.price | price) || '未设置'  }}
+        </span>
+        </td>
+        <td class="data-td">
+            <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline"
+                  shown="inserted == car" onbeforesave="saveCar($data)">
+                <a type="submit" ng-disabled="rowform.$waiting"
+                   class="table-btn  editable-table-button">
+                    保存
+                </a>
+                <a ng-if="car.id !== null" e-form="rowAddForm rowEditForm" type="button"
+                   ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()"
+                   class="table-btn editable-table-button">
+                    取消
+                </a>
+                <a ng-if="car.id == null" e-form="rowAddForm rowEditForm" type="button"
+                   ng-disabled="rowform.$waiting" ng-click="removeCar($index)"
+                   class="table-btn  editable-table-button">
+                    取消
+                </a>
+            </form>
+            <div class="buttons" ng-show="!rowform.$visible">
+                <a class="table-btn  editable-table-button" ng-click="editRow(rowform,car.line.id)">
+                    编辑
+                </a>
+                <a class="table-btn  editable-table-button" ng-click="removeCar($index)">删除</a>
+            </div>
+        </td>
+    </tr>
+</table>
+<div class="text-center">
+    <ul uib-pagination previous-text="上一页" next-text="下一页" last-text="尾页" first-text="首页"
+        total-items="pagination.totalItems" ng-model="pagination.currentPage" class="pagination-sm"
+        items-per-page="itemNum"
+        boundary-links="true" ng-change="pageChanged()"></ul>
+</div>

@@ -1,0 +1,28 @@
+<style>
+    .input-group-btn {
+        top: 8px;
+    }
+
+    .input-group .form-control {
+        margin-top: 15px;
+    }
+</style>
+
+<sale-table class="sale-table">
+    <items ng-repeat-start="item in items" item="item">
+    </items>
+    <areas ng-repeat-start="area in areas" item-id="item.area" area="area" ng-show="item.area == showArea">
+    </areas>
+    <sales ng-repeat="sale in sales" area-id="area.area" sale="sale" ng-show="(area.area == showSale)&&(item.area == showArea)">
+    </sales>
+    <div ng-repeat-end></div>
+    <div ng-repeat-end></div>
+
+</sale-table>
+
+<div class="text-center">
+    <ul uib-pagination previous-text="上一页" next-text="下一页" last-text="尾页" first-text="首页"
+        total-items="pagination.totalItems" ng-model="pagination.currentPage" class="pagination-sm"
+        items-per-page="itemNum"
+        boundary-links="true" ng-change="pageChanged()"></ul>
+</div>
