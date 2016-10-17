@@ -78,6 +78,7 @@ angular.module('myApp.content', ['ui.router'])
             .state('content.config', {
                 url: '/config',
                 templateUrl: 'content/config/config.html',
+                controller: 'ConfigCtrl',
                 resolve: {
                     loadConfigFiles: ["$ocLazyLoad", "loadContentFiles", function ($ocLazyLoad, loadContentFiles) {
                         return $ocLazyLoad.load({
