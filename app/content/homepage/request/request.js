@@ -1,10 +1,11 @@
 /**
- * Created by Lijingjing on 16/9/13.
+ * Created by Lijingjing on 16/9/19.
  */
+
 'use strict';
 
 angular.module('myApp.homepage')
-    .controller('TotalCtrl', TotalCtrl)
+    .controller('RequestCtrl', RequestCtrl)
     .factory('CarConfigService', CarConfigService)
     .filter('price', function () {
         var filter = function (input) {
@@ -56,7 +57,7 @@ function CarConfigService($http, BaseUrl) {
 
 
 /** @ngInject */
-function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigService) {
+function RequestCtrl($scope, $filter, editableOptions, editableThemes, CarConfigService) {
     $scope.smartTablePageSize = 10;
     $scope.pagination = {currentPage: 1};
 
@@ -87,7 +88,6 @@ function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSe
         CarConfigService.getConfig(lineNo).success(function (data, status) {
             $scope.configs = data.data;
         });
-
     };
 
     $scope.editRow = function (rowform, lineId) {
@@ -95,7 +95,6 @@ function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSe
         rowform.$show();
         $scope.getConfigs(lineId);
         //    之后添加获得颜色的函数
-
     };
 
     $scope.clearConfigsColors = function () {
@@ -111,7 +110,8 @@ function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSe
         {name: '粉'},
         {name: '蓝'}
     ];
-    
+
+
     $scope.showAddTime = function (car) {
         if ((typeof car.addTime == 'string') && car.addTime !== "") {
             var myDate = car.addTime.split('-');

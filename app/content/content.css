@@ -142,7 +142,7 @@
     padding-top: 15px;
 }
 
-.add-item {
+.add-item, .month-picker{
     display: inline-block;
     float: right;
     color: #8F001F;
@@ -245,7 +245,9 @@
     text-align: right;
 }
 
-
+.month-picker{
+    width: 140px;
+}
 /*.selectedArea :first-of-type{*/
     /*background-color: #ac2925;*/
 /*}*/

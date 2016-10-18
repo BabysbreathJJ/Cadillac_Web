@@ -31,6 +31,7 @@ angular.module('myApp', [
     });
 
 angular.module('myApp.constants', [])
+    // .constant('BaseUrl', 'http://192.168.0.104:8080')
     .constant('BaseUrl', 'http://115.159.78.97:8080')
     .constant('AUTH_EVENTS', {
         loginSuccess: 'auth-login-success',

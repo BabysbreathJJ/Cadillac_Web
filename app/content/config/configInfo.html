@@ -1,0 +1,127 @@
+<style>
+    .expander {
+        border: 1px solid black;
+        width: 250px;
+    }
+
+    .expander > .title {
+        background-color: black;
+        color: white;
+        padding: .1em .3em;
+        cursor: pointer;
+    }
+
+    .expander > .body {
+        padding: .1em .3em;
+    }
+
+    .configinfo {
+        margin: 5px;
+        /*position: relative;*/
+        text-align: center;
+    }
+
+    .carline {
+        margin: 5px 0;
+    }
+
+    .checkbox {
+        margin-top: 0px;
+        float: left;
+        margin-left: 30%;
+    }
+
+    .config {
+        margin-bottom: 15px;
+    }
+
+    .config-icon {
+        margin-left: 10px;
+    }
+
+    .color {
+        margin-left: 22%;
+    }
+
+    .width-p50 {
+        width: 50%;
+        float: left;
+    }
+
+</style>
+<div class="widgets">
+    <div class="row">
+        <div class="col-md-12">
+            <div ba-panel ba-panel-title="车辆配置信息" ba-panel-class="with-scroll">
+                <div class="row">
+                    <div class="col-xs-6 col-md-3 heading-widget"><h4>车系</h4></div>
+                    <div class="col-xs-6 col-md-3 heading-widget"><h4>配置</h4></div>
+                    <div class="col-xs-6 col-md-3 heading-widget"><h4>颜色</h4></div>
+                    <div class="col-xs-6 col-md-3">
+                        <div class="row primary">
+                            <div class="kameleon-row" ng-show="!edit" ng-click="startEdit()">
+                                <div class="kameleon-icon">
+                                    <i class="ion-edit"></i>
+                                    <span>编辑</span>
+                                </div>
+                            </div>
+                            <div class="kameleon-row" ng-click='cancelEdit()' ng-show="edit">
+                                <div class="kameleon-icon">
+                                    <i class="ion-refresh"></i>
+                                    <span>还原</span>
+                                </div>
+                            </div>
+                            <div class="kameleon-row" ng-show="edit">
+                                <div class="kameleon-icon">
+                                    <i class="ion-upload"></i>
+                                    <span>提交</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr style="margin-top: 5px;margin-bottom: 5px"/>
+                <div class="row">
+                    <container>
+                        <configinfo ng-repeat="carline in lines">
+                            <carline class="carline" line-name="carline.name" line-id="carline.id"
+                                     line-checked="carline.checked">
+                            </carline>
+                            <div class="col-md-6 col-xs-12">
+                                <div ng-show="showConfigs">
+                                    <configs ng-repeat="config in configs">
+                                        <config class="config width-p50" config-name="config.name"
+                                                config-id="config.id" carline-id="carline.id"
+                                                config-checked="config.checked">
+
+                                        </config>
+                                        <div class="width-p50" ng-show="showColors">
+                                            <div ng-repeat="color in colors">
+                                                <color class="color" config-id="config.id" color-name="color.name"
+                                                       color-id="color.id" color-checked="color.checked">
+                                                </color>
+                                            </div>
+                                        </div>
+                                    </configs>
+                                </div>
+
+                            </div>
+
+                            <div class="col-xs-6 col-md-3">
+                                <div class="kameleon-row" ng-show="edit">
+                                    <div class="kameleon-icon">
+                                        <i class="ion-checkmark-circled"></i>
+                                        <span>保存</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </configinfo>
+                    </container>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</div>
