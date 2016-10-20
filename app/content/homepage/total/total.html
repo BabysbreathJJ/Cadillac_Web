@@ -1,12 +1,12 @@
 <style>
-    .input-group-btn{
+    /*.input-group-btn{
         top:8px;
-    }
+    }*/
 
-    .input-group .form-control{
+/*    .input-group .form-control{
         margin-top: 15px;
     }
-</style>
+*/</style>
 <div class="add-item" ng-click="addCar()">
     <div class="add-icon ion-ios-plus-outline display-block"></div>
     <span class="add-text display-block">新增</span>
@@ -27,33 +27,33 @@
             {{(5*(pagination.currentPage-1)+$index+1)}}
         </td>
         <td class="data-td">
-        <span editable-text="car.serial" e-name="serial" e-form="rowform" e-required>
+        <span>
           {{ car.serial || '未设置' }}
         </span>
         </td>
         <td class="data-td">
         <span editable-select="car.line.id" e-name="line.id" e-form="rowform"
-              e-ng-options="line.id as line.name for line in lines" e-ng-change="getConfigs($data)">
+              e-ng-options="line.id as line.name for line in lines" e-ng-change="getConfigs($data)" onbeforesave="checkLineId($data)">
           {{ car.line.name || '未设置' }}
         </span>
         </td>
         <td class="data-td">
         <span editable-select="car.configuration.id" e-name="configuration.id" e-form="rowform"
-              e-ng-options="configuration.id as configuration.name for configuration in configs">
+              e-ng-options="configuration.id as configuration.name for configuration in configs" onbeforesave="checkConfig($data)">
           <!--{{ showConfig(car) }}-->
             {{car.configuration.name || '未设置'}}
         </span>
         </td>
         <td class="data-td">
         <span editable-select="car.color" e-name="color.name" e-form="rowform"
-              e-ng-options="color.name as color.name for color in colors">
+              e-ng-options="color.name as color.name for color in colors" onbeforesave="checkColor($data)">
           {{ car.color || '未设置'}}
         </span>
         </td>
         <td class="data-td">
         <span e-name="addTime" e-form="rowform"
               e-datepicker-popup="yyyy-MM-dd" editable-bsdate="car.addTime"
-              e-is-open="opened.$data" e-ng-click="open($event,'$data')">
+              e-is-open="opened.$data" e-ng-click="open($event,'$data')" onbeforesave="checkAddTime($data)">
           {{(showAddTime(car) | date:'yyyy-MM-dd') || '未设置' }}
         </span>
         </td>
@@ -64,19 +64,18 @@
         </span>
         </td>
         <td class="data-td">
-            <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline"
-                  shown="inserted == car" onbeforesave="saveCar($data)">
-                <a type="submit" ng-disabled="rowform.$waiting"
+            <form editable-form name="rowform" onbeforesave="saveCar($data, car.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == car" >
+                <button type="submit" ng-disabled="rowform.$waiting"
                         class="table-btn  editable-table-button">
                     保存
-                </a>
+                </button>
                 <a ng-if="car.id !== null" e-form="rowAddForm rowEditForm" type="button"
                         ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()"
                         class="table-btn editable-table-button">
                     取消
                 </a>
                 <a ng-if="car.id == null" e-form="rowAddForm rowEditForm" type="button"
-                        ng-disabled="rowform.$waiting" ng-click="removeCar($index)"
+                        ng-disabled="rowform.$waiting" ng-click="cancelAdding($index)"
                         class="table-btn  editable-table-button">
                     取消
                 </a>
@@ -85,7 +84,7 @@
                 <a class="table-btn  editable-table-button" ng-click="editRow(rowform,car.line.id)">
                     编辑
                 </a>
-                <a class="table-btn  editable-table-button" ng-click="removeCar($index)">删除</a>
+                <a class="table-btn  editable-table-button" ng-click="removeCar($index, car.id)">删除</a>
             </div>
         </td>
     </tr>

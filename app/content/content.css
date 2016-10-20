@@ -5,6 +5,7 @@
     top: 0px;
     width: 100%;
     vertical-align: middle;
+    z-index: 9999;
 }
 
 .header .nav {
@@ -202,6 +203,11 @@
 
 .table-btn {
     color: black;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
 }
 
 .table-btn:hover {

@@ -67,9 +67,24 @@ angular.module('myApp.content', ['ui.router'])
                 resolve: {
                     loadTotalFiles: ["$ocLazyLoad", "loadHomepageFiles", function ($ocLazyLoad, loadHomepageFiles) {
                         return $ocLazyLoad.load({
-                            name: 'total',
+                            name: 'done',
                             files: [
                                 'content/homepage/done/done.js'
+                            ]
+                        });
+                    }]
+                }
+            })
+            .state('content.homepage.request', {
+                url: '/request',
+                templateUrl: 'content/homepage/request/request.html',
+                controller: 'RequestCtrl',
+                resolve: {
+                    loadTotalFiles: ["$ocLazyLoad", "loadHomepageFiles", function ($ocLazyLoad, loadHomepageFiles) {
+                        return $ocLazyLoad.load({
+                            name: 'request',
+                            files: [
+                                'content/homepage/request/request.js'
                             ]
                         });
                     }]
