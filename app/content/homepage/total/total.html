@@ -66,10 +66,10 @@
         <td class="data-td">
             <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline"
                   shown="inserted == car" onbeforesave="saveCar($data)">
-                <a type="submit" ng-disabled="rowform.$waiting"
+                <button type="submit" ng-disabled="rowform.$waiting"
                         class="table-btn  editable-table-button">
                     保存
-                </a>
+                </button>
                 <a ng-if="car.id !== null" e-form="rowAddForm rowEditForm" type="button"
                         ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()"
                         class="table-btn editable-table-button">
