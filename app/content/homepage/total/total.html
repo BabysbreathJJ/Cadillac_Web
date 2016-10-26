@@ -7,10 +7,10 @@
         margin-top: 15px;
     }
 */</style>
-<div class="add-item" ng-click="addCar()">
+<!-- <div class="add-item" ng-click="addCar()">
     <div class="add-icon ion-ios-plus-outline display-block"></div>
     <span class="add-text display-block">新增</span>
-</div>
+</div> -->
 <table class="data table" style="text-align: center;">
     <tr class="table-header">
         <th class="data-th" width="8%">序号</th>
@@ -20,11 +20,11 @@
         <th class="data-th" width="10%">颜色</th>
         <th class="data-th" width="15%">入库时间</th>
         <th class="data-th" width="10%">定价</th>
-        <th class="data-th" width="15%">操作</th>
+        <!-- <th class="data-th" width="15%">操作</th> -->
     </tr>
     <tr ng-repeat="car in cars" class="editable-row">
         <td class="data-td">
-            {{(5*(pagination.currentPage-1)+$index+1)}}
+            {{(10*(pagination.currentPage-1)+$index+1)}}
         </td>
         <td class="data-td">
         <span>
@@ -63,7 +63,7 @@
           {{(car.price | price) || '未设置'  }}
         </span>
         </td>
-        <td class="data-td">
+        <!-- <td class="data-td">
             <form editable-form name="rowform" onbeforesave="saveCar($data, car.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == car" >
                 <button type="submit" ng-disabled="rowform.$waiting"
                         class="table-btn  editable-table-button">
@@ -86,7 +86,7 @@
                 </a>
                 <a class="table-btn  editable-table-button" ng-click="removeCar($index, car.id)">删除</a>
             </div>
-        </td>
+        </td> -->
     </tr>
 </table>
 <div class="text-center">

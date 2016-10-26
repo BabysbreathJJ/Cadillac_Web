@@ -19,7 +19,8 @@ angular.module('myApp.homepage', ['ui.router', 'xeditable', 'ui.bootstrap'])
     		$http({
             method : 'GET',
             headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
-            url : BaseUrl + '/CarPlatform/cars/count'
+            url : BaseUrl + '/CarPlatform/cars/count',
+            crossDomain:true
         	}).success(function(data, status){
         		$scope.allcount = data.data[0];
 		    	$scope.donecount = data.data[1];
@@ -29,7 +30,7 @@ angular.module('myApp.homepage', ['ui.router', 'xeditable', 'ui.bootstrap'])
 		    	$scope.deletedcount = data.data[5];
         	}).error(function(data, status){
         		alert('获取失败');
-        	})
+        	});
     	};
-    	$scope.getCounts();
+    	
     });

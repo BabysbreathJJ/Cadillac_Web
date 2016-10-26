@@ -8,7 +8,7 @@
             <span class="text">已交易 ({{donecount}}) </span>
             <span class="item-right">|</span>
         </div>
-        <div class="item">
+        <div class="item" ui-sref="content.homepage.normal" ui-sref-active="active">
             <span class="text">待交易 ({{waitcount}}) </span>
             <span class="item-right">|</span>
         </div>
@@ -19,11 +19,11 @@
             <div class="request hint">{{requestcount}}</div>
             <span class="item-right">|</span>
         </div>
-        <div class="item">
+        <div class="item" ui-sref="content.homepage.selfdeleted" ui-sref-active="active">
             <span class="text">自删除 ({{deletecount}}) </span>
             <span class="item-right">|</span>
         </div>
-        <div class="item">
+        <div class="item" ui-sref="content.homepage.deleted" ui-sref-active="active">
             <span class="text item-last">被删除 ({{deletedcount}}) </span>
         </div>
     </div>

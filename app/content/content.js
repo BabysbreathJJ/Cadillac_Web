@@ -75,6 +75,21 @@ angular.module('myApp.content', ['ui.router'])
                     }]
                 }
             })
+            .state('content.homepage.normal', {
+                url: '/normal',
+                templateUrl: 'content/homepage/normal/normal.html',
+                controller: 'NormalCtrl',
+                resolve: {
+                    loadTotalFiles: ["$ocLazyLoad", "loadHomepageFiles", function ($ocLazyLoad, loadHomepageFiles) {
+                        return $ocLazyLoad.load({
+                            name: 'normal',
+                            files: [
+                                'content/homepage/normal/normal.js'
+                            ]
+                        });
+                    }]
+                }
+            })
             .state('content.homepage.request', {
                 url: '/request',
                 templateUrl: 'content/homepage/request/request.html',
@@ -85,6 +100,36 @@ angular.module('myApp.content', ['ui.router'])
                             name: 'request',
                             files: [
                                 'content/homepage/request/request.js'
+                            ]
+                        });
+                    }]
+                }
+            })
+            .state('content.homepage.selfdeleted', {
+                url: '/selfdeleted',
+                templateUrl: 'content/homepage/selfdeleted/selfdeleted.html',
+                controller: 'SelfDeletedCtrl',
+                resolve: {
+                    loadTotalFiles: ["$ocLazyLoad", "loadHomepageFiles", function ($ocLazyLoad, loadHomepageFiles) {
+                        return $ocLazyLoad.load({
+                            name: 'selfdeleted',
+                            files: [
+                                'content/homepage/selfdeleted/selfdeleted.js'
+                            ]
+                        });
+                    }]
+                }
+            })
+            .state('content.homepage.deleted', {
+                url: '/deleted',
+                templateUrl: 'content/homepage/deleted/deleted.html',
+                controller: 'DeletedCtrl',
+                resolve: {
+                    loadTotalFiles: ["$ocLazyLoad", "loadHomepageFiles", function ($ocLazyLoad, loadHomepageFiles) {
+                        return $ocLazyLoad.load({
+                            name: 'deleted',
+                            files: [
+                                'content/homepage/deleted/deleted.js'
                             ]
                         });
                     }]

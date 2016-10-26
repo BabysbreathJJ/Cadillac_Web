@@ -5,8 +5,8 @@
 'use strict';
 
 angular.module('myApp.homepage')
-    .controller('RequestCtrl', RequestCtrl)
-    .factory('CarRequestService', CarRequestService)
+    .controller('SelfDeletedCtrl', SelfDeletedCtrl)
+    .factory('CarSelfDeletedService', CarSelfDeletedService)
     .filter('price', function () {
         var filter = function (input) {
             return input + '万';
@@ -15,12 +15,12 @@ angular.module('myApp.homepage')
     });
 
 
-function CarRequestService($http, BaseUrl) {
+function CarSelfDeletedService($http, BaseUrl) {
 
     var getCarsRequest = function (pageNo) {
         return $http({
             method: 'GET',
-            url: BaseUrl + '/CarPlatform/cars/page/requested?page=' + pageNo,
+            url: BaseUrl + '/CarPlatform/cars/page/selfdeleted?page=' + pageNo,
             headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
             crossDomain: true
         });
@@ -42,23 +42,6 @@ function CarRequestService($http, BaseUrl) {
         });
     };
 
-    var confirmRequest = function(id){
-        return $http({
-            method: 'POST',
-            url: BaseUrl + '/CarPlatform/orders/' + id + '/confirm/',
-            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
-            crossDomain: true
-        });
-    };
-    var refuseRequest = function(id){
-        return $http({
-            method: 'POST',
-            url: BaseUrl + '/CarPlatform/orders/' + id + '/refuse',
-            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
-            crossDomain: true
-        });
-    };
-
     return {
         getCars: function (pageNo) {
             return getCarsRequest(pageNo);
@@ -68,12 +51,6 @@ function CarRequestService($http, BaseUrl) {
         },
         getConfig: function (lineNo) {
             return getConfigRequest(lineNo);
-        },
-        confirmRequest: function(id){
-            return confirmRequest(id);
-        },
-        refuseRequest: function(id){
-            return refuseRequest(id);
         }
     }
 
@@ -81,19 +58,15 @@ function CarRequestService($http, BaseUrl) {
 
 
 /** @ngInject */
-function RequestCtrl($scope, $filter, editableOptions, editableThemes, CarRequestService) {
+function SelfDeletedCtrl($scope, $filter, editableOptions, editableThemes, CarSelfDeletedService) {
     $scope.smartTablePageSize = 10;
     $scope.pagination = {currentPage: 1};
 
     $scope.getCars = function (pageNo) {
-        CarRequestService.getCars(pageNo).success(function (data, status) {
+        CarSelfDeletedService.getCars(pageNo).success(function (data, status) {
             $scope.cars = data.data;
-            // if(data.count == 0)
-            //     $scope.cars = [];
-            console.log(data.data);
-            console.log($scope.cars);
             $scope.pagination.totalItems = data.count;
-           $scope.getCounts();
+            $scope.getCounts();
         });
     };
 
@@ -109,12 +82,12 @@ function RequestCtrl($scope, $filter, editableOptions, editableThemes, CarReques
         $scope.opened[elementOpened] = !$scope.opened[elementOpened];
     };
 
-    CarRequestService.getLines().success(function (data, status) {
+    CarSelfDeletedService.getLines().success(function (data, status) {
         $scope.lines = data.data;
     });
 
     $scope.getConfigs = function (lineNo) {
-        CarRequestService.getConfig(lineNo).success(function (data, status) {
+        CarSelfDeletedService.getConfig(lineNo).success(function (data, status) {
             $scope.configs = data.data;
         });
     };
@@ -142,14 +115,12 @@ function RequestCtrl($scope, $filter, editableOptions, editableThemes, CarReques
 
 
     $scope.showAddTime = function (car) {
-        if(car == null)
-            return;
         if ((typeof car.addTime == 'string') && car.addTime !== "") {
             var myDate = car.addTime.split('-');
             var year = myDate[0];
             var month = myDate[1];
             var day = myDate[2];
-            car.addTime = new Date(year, month, day);
+            car.addTime = new Date(year, month - 1, day);
         }
         return car.addTime;
 
@@ -207,28 +178,6 @@ function RequestCtrl($scope, $filter, editableOptions, editableThemes, CarReques
             newData.addTime = $scope.formatDate(addTime);
         console.log(newData);
 
-    };
-
-    $scope.confirmRequest = function(id){
-        var m = confirm("是否确认请求？");
-        if(m===false) return;
-        CarRequestService.confirmRequest(id).success(function(data, status){
-            alert(status);
-            $scope.pageChanged();
-        }).error(function(data, status){
-            alert(status);
-        });
-    };
-
-    $scope.refuseRequest = function(id){
-        var m = confirm("是否拒绝请求？");
-        if(m===false) return;
-        CarRequestService.refuseRequest(id).success(function(data, status){
-            alert(status);
-            $scope.pageChanged();
-        }).error(function(data,status){
-            alert(status);
-        });
     };
 
 

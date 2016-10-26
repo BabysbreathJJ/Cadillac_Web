@@ -6,7 +6,7 @@
 
 angular.module('myApp.homepage')
     .controller('DoneCtrl', DoneCtrl)
-    .factory('CarConfigService', CarConfigService)
+    .factory('CarDoneService', CarDoneService)
     .filter('price', function () {
         var filter = function (input) {
             return input + '万';
@@ -15,12 +15,13 @@ angular.module('myApp.homepage')
     });
 
 
-function CarConfigService($http, BaseUrl) {
+function CarDoneService($http, BaseUrl) {
 
     var getCarsRequest = function (pageNo) {
         return $http({
             method: 'GET',
-            url: BaseUrl + '/CarPlatform/cars/search?page=' + pageNo,
+            url: BaseUrl + '/CarPlatform/cars/page/finished?page=' + pageNo,
+            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
             crossDomain: true
         });
     };
@@ -57,14 +58,15 @@ function CarConfigService($http, BaseUrl) {
 
 
 /** @ngInject */
-function DoneCtrl($scope, $filter, editableOptions, editableThemes, CarConfigService) {
+function DoneCtrl($scope, $filter, editableOptions, editableThemes, CarDoneService) {
     $scope.smartTablePageSize = 10;
     $scope.pagination = {currentPage: 1};
 
     $scope.getCars = function (pageNo) {
-        CarConfigService.getCars(pageNo).success(function (data, status) {
+        CarDoneService.getCars(pageNo).success(function (data, status) {
             $scope.cars = data.data;
-            $scope.pagination.totalItems = data.pages;
+            $scope.pagination.totalItems = data.count;
+            $scope.getCounts();
         });
     };
 
@@ -80,12 +82,12 @@ function DoneCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSer
         $scope.opened[elementOpened] = !$scope.opened[elementOpened];
     };
 
-    CarConfigService.getLines().success(function (data, status) {
+    CarDoneService.getLines().success(function (data, status) {
         $scope.lines = data.data;
     });
 
     $scope.getConfigs = function (lineNo) {
-        CarConfigService.getConfig(lineNo).success(function (data, status) {
+        CarDoneService.getConfig(lineNo).success(function (data, status) {
             $scope.configs = data.data;
         });
     };
@@ -118,7 +120,7 @@ function DoneCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSer
             var year = myDate[0];
             var month = myDate[1];
             var day = myDate[2];
-            car.addTime = new Date(year, month, day);
+            car.addTime = new Date(year, month - 1, day);
         }
         return car.addTime;
 
@@ -190,7 +192,7 @@ function DoneCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSer
         $scope.pagination.currentPage = pageNo;
     };
 
-    $scope.itemNum = 5;
+    $scope.itemNum = 10;
 
     $scope.pageChanged = function () {
         $scope.getCars($scope.pagination.currentPage);
