@@ -1,17 +1,52 @@
-<div class="toolbar clearfix">
-    <div class="items">
-        <div class="item" ui-sref="content.statistic.publish" ui-sref-active="active">
-            <span class="text item-first">已发布</span>
-            <span class="item-right">|</span>
-        </div>
-        <div class="item" ui-sref="content.statistic.request" ui-sref-active="active">
-            <span class="text">被请求</span>
-            <span class="item-right">|</span>
-        </div>
-        <div class="item" ui-sref="content.statistic.done" ui-sref-active="active">
-            <span class="text">已成交</span>
-        </div>
+<div class="toolbar clearfix row">
+    <!--<div class="items ">-->
+        <!--<div class="item" ui-sref="content.statistic.publish" ui-sref-active="active">-->
+            <!--<span class="text item-first">已发布</span>-->
+            <!--<span class="item-right">|</span>-->
+        <!--</div>-->
+        <!--<div class="item" ui-sref="content.statistic.request" ui-sref-active="active">-->
+            <!--<span class="text">被请求</span>-->
+            <!--<span class="item-right">|</span>-->
+        <!--</div>-->
+        <!--<div class="item" ui-sref="content.statistic.done" ui-sref-active="active">-->
+            <!--<span class="text">已成交</span>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="col-md-2 date-text">
+        <span>开始时间:</span>
+    </div>
+    <div class="col-md-2 mg-top-15">
+        <p class="input-group">
+            <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="startTime"
+                   ng-change="dateChange()"
+                   is-open="popup1.opened" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                   readonly="readonly"/>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open1()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+        </p>
+    </div>
+    <div class="col-md-2 date-text">
+        结束时间:
+    </div>
+    <div class="col-md-2 mg-top-15">
+        <p class="input-group">
+            <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="endTime"
+                   ng-change="dateChange()"
+                   is-open="popup2.opened" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                   readonly="readonly"/>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open2()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+        </p>
+    </div>
+    <div class="mg-top-15">
+        <button type="button" class="btn login-btn" ng-click="search()">查询</button>
     </div>
 
 </div>
-<div ui-view></div>
+<p class="mg-top-15">
+    {{result}}
+</p>
