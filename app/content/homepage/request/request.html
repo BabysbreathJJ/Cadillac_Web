@@ -6,11 +6,20 @@
     .input-group .form-control{
         margin-top: 15px;
     }*/
+    .request-row{
+        background-color: rgb(244,223,227);
+        /*border-bottom: 1px solid #878787;*/ 
+    }
+    .confirm-btn{
+        color: #8F001F;
+    }
 </style>
-<!-- <div class="add-item table" ng-click="addCar()">
+<!--
+<div class="add-item table" ng-click="addCar()">
     <div class="add-icon ion-ios-plus-outline display-block"></div>
     <span class="add-text display-block">新增</span>
-</div> -->
+</div>
+-->
 <table class="data table" style="text-align: center;">
     <tr class="table-header">
         <th class="data-th" width="8%">序号</th>
@@ -20,50 +29,50 @@
         <th class="data-th" width="10%">颜色</th>
         <th class="data-th" width="15%">入库时间</th>
         <th class="data-th" width="10%">定价</th>
-        <!-- <th class="data-th" width="15%">操作</th> -->
+        <th class="data-th" width="15%">操作</th>
     </tr>
-    <tr ng-repeat="car in cars" class="editable-row">
+    <tr ng-repeat="car in cars" class="editable-row request-row">
         <td class="data-td">
-            {{(10*(pagination.currentPage-1)+$index+1)}}
+            {{(5*(pagination.currentPage-1)+$index+1)}}
         </td>
         <td class="data-td">
-        <span editable-text="car.serial" e-name="serial" e-form="rowform" e-required>
-          {{ car.serial || '未设置' }}
+        <span editable-text="car.car.serial" e-name="serial" e-form="rowform" e-required>
+          {{ car.car.serial || '未设置' }}
         </span>
         </td>
         <td class="data-td">
-        <span editable-select="car.line.id" e-name="line.id" e-form="rowform"
+        <span editable-select="car.car.line.id" e-name="line.id" e-form="rowform"
               e-ng-options="line.id as line.name for line in lines" e-ng-change="getConfigs($data)">
-          {{ car.line.name || '未设置' }}
+          {{ car.car.line.name || '未设置' }}
         </span>
         </td>
         <td class="data-td">
-        <span editable-select="car.configuration.id" e-name="configuration.id" e-form="rowform"
+        <span editable-select="car.car.configuration.id" e-name="configuration.id" e-form="rowform"
               e-ng-options="configuration.id as configuration.name for configuration in configs">
           <!--{{ showConfig(car) }}-->
-            {{car.configuration.name || '未设置'}}
+            {{car.car.configuration.name || '未设置'}}
         </span>
         </td>
         <td class="data-td">
-        <span editable-select="car.color" e-name="color.name" e-form="rowform"
+        <span editable-select="car.car.color" e-name="color.name" e-form="rowform"
               e-ng-options="color.name as color.name for color in colors">
-          {{ car.color || '未设置'}}
+          {{ car.car.color || '未设置'}}
         </span>
         </td>
         <td class="data-td">
         <span e-name="addTime" e-form="rowform"
-              e-datepicker-popup="yyyy-MM-dd" editable-bsdate="car.addTime"
+              e-datepicker-popup="yyyy-MM-dd" editable-bsdate="car.car.addTime"
               e-is-open="opened.$data" e-ng-click="open($event,'$data')">
-          {{(showAddTime(car) | date:'yyyy-MM-dd') || '未设置' }}
+          {{(showAddTime(car.car) | date:'yyyy-MM-dd') || '未设置' }}
         </span>
         </td>
         <td class="data-td" style="padding-left: 10px">
-       <span editable-text="car.price" e-name="number" e-form="rowform" e-required
+       <span editable-text="car.car.price" e-name="number" e-form="rowform" e-required
              onbeforesave="checkPrice($data)">
-          {{(car.price | price) || '未设置'  }}
+          {{(car.car.price | price) || '未设置'  }}
         </span>
         </td>
-        <!-- <td class="data-td">
+        <td class="data-td">
             <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline"
                   shown="inserted == car" onbeforesave="saveCar($data)">
                 <a type="submit" ng-disabled="rowform.$waiting"
@@ -82,12 +91,14 @@
                 </a>
             </form>
             <div class="buttons" ng-show="!rowform.$visible">
-                <a class="table-btn  editable-table-button" ng-click="editRow(rowform,car.line.id)">
-                    编辑
+                <!-- <a class="table-btn  editable-table-button confirm-btn" ng-click="editRow(rowform,car.line.id)"> -->
+                <a class="table-btn  editable-table-button confirm-btn" ng-click='confirmRequest(car.id)'>
+                    确认
                 </a>
-                <a class="table-btn  editable-table-button" ng-click="removeCar($index)">删除</a>
+                <!-- <a class="table-btn  editable-table-button" ng-click="removeCar($index)"> -->
+                <a class="table-btn  editable-table-button" ng-click='refuseRequest(car.id)'>拒绝</a>
             </div>
-        </td> -->
+        </td>
     </tr>
 </table>
 <div class="text-center">

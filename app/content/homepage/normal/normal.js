@@ -1,31 +1,32 @@
 /**
- * Created by Lijingjing on 16/9/13.
+ * Created by Lijingjing on 16/9/19.
  */
+
 'use strict';
 
 angular.module('myApp.homepage')
-    .controller('TotalCtrl', TotalCtrl)
-    .factory('CarConfigService', CarConfigService)
-    .filter('price', function() {
-        var filter = function(input) {
+    .controller('NormalCtrl', NormalCtrl)
+    .factory('CarNormalService', CarNormalService)
+    .filter('price', function () {
+        var filter = function (input) {
             return input + '万';
         };
         return filter;
     });
 
 
-function CarConfigService($http, BaseUrl) {
+function CarNormalService($http, BaseUrl) {
 
-    var getCarsRequest = function(pageNo) {
+    var getCarsRequest = function (pageNo) {
         return $http({
             method: 'GET',
-            url: BaseUrl + '/CarPlatform/cars/page/all?page=' + pageNo,
+            url: BaseUrl + '/CarPlatform/cars/page/normal?page=' + pageNo,
             headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
             crossDomain: true
         });
     };
 
-    var getLinesRequest = function() {
+    var getLinesRequest = function () {
         return $http({
             method: 'GET',
             url: BaseUrl + '/CarPlatform/lines',
@@ -33,7 +34,7 @@ function CarConfigService($http, BaseUrl) {
         });
     };
 
-    var getConfigRequest = function(lineNo) {
+    var getConfigRequest = function (lineNo) {
         return $http({
             method: 'GET',
             url: BaseUrl + '/CarPlatform/configurations/byline?line=' + lineNo,
@@ -68,13 +69,13 @@ function CarConfigService($http, BaseUrl) {
         });
     };
     return {
-        getCars: function(pageNo) {
+        getCars: function (pageNo) {
             return getCarsRequest(pageNo);
         },
-        getLines: function() {
+        getLines: function () {
             return getLinesRequest();
         },
-        getConfig: function(lineNo) {
+        getConfig: function (lineNo) {
             return getConfigRequest(lineNo);
         },
         postCar: function(data) {
@@ -92,7 +93,7 @@ function CarConfigService($http, BaseUrl) {
 
 
 /** @ngInject */
-function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigService) {
+function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalService) {
     Date.prototype.Format = function(fmt) { //author: meizz 
         var o = {
             "M+": this.getMonth() + 1, //月份 
@@ -108,12 +109,11 @@ function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSe
             if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
         return fmt;
     };
-
     $scope.smartTablePageSize = 10;
-    $scope.pagination = { currentPage: 1 };
+    $scope.pagination = {currentPage: 1};
 
-    $scope.getCars = function(pageNo) {
-        CarConfigService.getCars(pageNo).success(function(data, status) {
+    $scope.getCars = function (pageNo) {
+        CarNormalService.getCars(pageNo).success(function (data, status) {
             $scope.cars = data.data;
             $scope.pagination.totalItems = data.count;
             $scope.getCounts();
@@ -125,47 +125,46 @@ function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSe
 
     $scope.opened = {};
 
-    $scope.open = function($event, elementOpened) {
+    $scope.open = function ($event, elementOpened) {
         $event.preventDefault();
         $event.stopPropagation();
 
         $scope.opened[elementOpened] = !$scope.opened[elementOpened];
     };
 
-    CarConfigService.getLines().success(function(data, status) {
+    CarNormalService.getLines().success(function (data, status) {
         $scope.lines = data.data;
     });
 
-    $scope.getConfigs = function(lineNo) {
-        CarConfigService.getConfig(lineNo).success(function(data, status) {
+    $scope.getConfigs = function (lineNo) {
+        CarNormalService.getConfig(lineNo).success(function (data, status) {
             $scope.configs = data.data;
         });
-
     };
 
-    $scope.editRow = function(rowform, lineId) {
+    $scope.editRow = function (rowform, lineId) {
         //$scope.clearConfigsColors();
         rowform.$show();
         $scope.getConfigs(lineId);
         //    之后添加获得颜色的函数
-
     };
 
-    $scope.clearConfigsColors = function() {
+    $scope.clearConfigsColors = function () {
         $scope.configs = [];
         $scope.colors = [];
     };
 
     $scope.colors = [
-        { name: '红' },
-        { name: '白' },
-        { name: '金' },
-        { name: '黑' },
-        { name: '粉' },
-        { name: '蓝' }
+        {name: '红'},
+        {name: '白'},
+        {name: '金'},
+        {name: '黑'},
+        {name: '粉'},
+        {name: '蓝'}
     ];
 
-    $scope.showAddTime = function(car) {
+
+    $scope.showAddTime = function (car) {
         if ((typeof car.addTime == 'string') && car.addTime !== "") {
             var myDate = car.addTime.split('-');
             var year = myDate[0];
@@ -177,37 +176,35 @@ function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSe
 
     };
 
-    $scope.removeCar = function(index, id) {
-        //$scope.clearConfigsColors();
+    $scope.removeCar = function (index, id) {
         $scope.cars.splice(index, 1);
         console.log($scope.cars);
-        CarConfigService.deleteCar(id).success(function(data, status){
+        CarNormalService.deleteCar(id).success(function(data, status){
             alert(status);
-            
+            //$scope.getCounts();
             $scope.pageChanged();
         }).error(function(data,status){
             alert(status);
         });
-        
         //    之后要和后台交互
     };
 
-    $scope.addCar = function() {
+    $scope.addCar = function () {
         //$scope.clearConfigsColors();
         $scope.inserted = {
             id: null,
             name: '',
             serial: null,
-            configuration: { id: null, name: null },
+            configuration: {id: null, name: null},
             interiorColor: null,
             addTime: '',
             price: "",
-            dealer: { id: 2 }
+            dealer: {id: 2}
         };
         $scope.cars.unshift($scope.inserted);
     };
 
-    $scope.formatDate = function(myDate) {
+    $scope.formatDate = function (myDate) {
 
         var year = myDate.getFullYear();
         var tempMonth = myDate.getMonth() + 1;
@@ -271,13 +268,14 @@ function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSe
             }
         };
         if(id == null){
-            CarConfigService.postCar(JSON.stringify(d)).success(function(data, status){
+            CarNormalService.postCar(JSON.stringify(d)).success(function(data, status){
                 $scope.getCars($scope.pagination.currentPage);
+                //$scope.getCounts();
             }).error(function(data, stauts){
                 alert('添加失败');
             });
         }else{
-            CarConfigService.changeCar(JSON.stringify(d), id).success(function(data, status){
+            CarNormalService.changeCar(JSON.stringify(d), id).success(function(data, status){
                 $scope.cars = $scope.cars.map(function(x){
                     if(x.id === id)
                         return data.data;
@@ -292,8 +290,11 @@ function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSe
     };
 
     $scope.cancelAdding = function(index){
+        console.log(index);
         $scope.cars.splice(index, 1);
     }
+
+
     editableOptions.theme = 'bs3';
     editableThemes['bs3'].submitTpl = '<button type="submit" class="btn btn-primary btn-with-icon"><i class="ion-checkmark-round"></i></button>';
     editableThemes['bs3'].cancelTpl = '<button type="button" ng-click="$form.$cancel()" class="btn btn-default btn-with-icon"><i class="ion-close-round"></i></button>';
@@ -301,13 +302,13 @@ function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSe
 
     //    分页逻辑
 
-    $scope.setPage = function(pageNo) {
+    $scope.setPage = function (pageNo) {
         $scope.pagination.currentPage = pageNo;
     };
 
     $scope.itemNum = 10;
 
-    $scope.pageChanged = function() {
+    $scope.pageChanged = function () {
         $scope.getCars($scope.pagination.currentPage);
     };
 

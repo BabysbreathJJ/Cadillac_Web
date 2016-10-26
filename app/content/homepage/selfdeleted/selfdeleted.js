@@ -5,8 +5,8 @@
 'use strict';
 
 angular.module('myApp.homepage')
-    .controller('DoneCtrl', DoneCtrl)
-    .factory('CarDoneService', CarDoneService)
+    .controller('SelfDeletedCtrl', SelfDeletedCtrl)
+    .factory('CarSelfDeletedService', CarSelfDeletedService)
     .filter('price', function () {
         var filter = function (input) {
             return input + '万';
@@ -15,12 +15,12 @@ angular.module('myApp.homepage')
     });
 
 
-function CarDoneService($http, BaseUrl) {
+function CarSelfDeletedService($http, BaseUrl) {
 
     var getCarsRequest = function (pageNo) {
         return $http({
             method: 'GET',
-            url: BaseUrl + '/CarPlatform/cars/page/finished?page=' + pageNo,
+            url: BaseUrl + '/CarPlatform/cars/page/selfdeleted?page=' + pageNo,
             headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
             crossDomain: true
         });
@@ -58,12 +58,12 @@ function CarDoneService($http, BaseUrl) {
 
 
 /** @ngInject */
-function DoneCtrl($scope, $filter, editableOptions, editableThemes, CarDoneService) {
+function SelfDeletedCtrl($scope, $filter, editableOptions, editableThemes, CarSelfDeletedService) {
     $scope.smartTablePageSize = 10;
     $scope.pagination = {currentPage: 1};
 
     $scope.getCars = function (pageNo) {
-        CarDoneService.getCars(pageNo).success(function (data, status) {
+        CarSelfDeletedService.getCars(pageNo).success(function (data, status) {
             $scope.cars = data.data;
             $scope.pagination.totalItems = data.count;
             $scope.getCounts();
@@ -82,12 +82,12 @@ function DoneCtrl($scope, $filter, editableOptions, editableThemes, CarDoneServi
         $scope.opened[elementOpened] = !$scope.opened[elementOpened];
     };
 
-    CarDoneService.getLines().success(function (data, status) {
+    CarSelfDeletedService.getLines().success(function (data, status) {
         $scope.lines = data.data;
     });
 
     $scope.getConfigs = function (lineNo) {
-        CarDoneService.getConfig(lineNo).success(function (data, status) {
+        CarSelfDeletedService.getConfig(lineNo).success(function (data, status) {
             $scope.configs = data.data;
         });
     };

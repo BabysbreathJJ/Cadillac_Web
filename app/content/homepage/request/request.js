@@ -5,8 +5,8 @@
 'use strict';
 
 angular.module('myApp.homepage')
-    .controller('DoneCtrl', DoneCtrl)
-    .factory('CarDoneService', CarDoneService)
+    .controller('RequestCtrl', RequestCtrl)
+    .factory('CarRequestService', CarRequestService)
     .filter('price', function () {
         var filter = function (input) {
             return input + '万';
@@ -15,12 +15,12 @@ angular.module('myApp.homepage')
     });
 
 
-function CarDoneService($http, BaseUrl) {
+function CarRequestService($http, BaseUrl) {
 
     var getCarsRequest = function (pageNo) {
         return $http({
             method: 'GET',
-            url: BaseUrl + '/CarPlatform/cars/page/finished?page=' + pageNo,
+            url: BaseUrl + '/CarPlatform/cars/page/requested?page=' + pageNo,
             headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
             crossDomain: true
         });
@@ -42,6 +42,23 @@ function CarDoneService($http, BaseUrl) {
         });
     };
 
+    var confirmRequest = function(id){
+        return $http({
+            method: 'POST',
+            url: BaseUrl + '/CarPlatform/orders/' + id + '/confirm/',
+            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            crossDomain: true
+        });
+    };
+    var refuseRequest = function(id){
+        return $http({
+            method: 'POST',
+            url: BaseUrl + '/CarPlatform/orders/' + id + '/refuse',
+            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            crossDomain: true
+        });
+    };
+
     return {
         getCars: function (pageNo) {
             return getCarsRequest(pageNo);
@@ -51,6 +68,12 @@ function CarDoneService($http, BaseUrl) {
         },
         getConfig: function (lineNo) {
             return getConfigRequest(lineNo);
+        },
+        confirmRequest: function(id){
+            return confirmRequest(id);
+        },
+        refuseRequest: function(id){
+            return refuseRequest(id);
         }
     }
 
@@ -58,15 +81,19 @@ function CarDoneService($http, BaseUrl) {
 
 
 /** @ngInject */
-function DoneCtrl($scope, $filter, editableOptions, editableThemes, CarDoneService) {
+function RequestCtrl($scope, $filter, editableOptions, editableThemes, CarRequestService) {
     $scope.smartTablePageSize = 10;
     $scope.pagination = {currentPage: 1};
 
     $scope.getCars = function (pageNo) {
-        CarDoneService.getCars(pageNo).success(function (data, status) {
+        CarRequestService.getCars(pageNo).success(function (data, status) {
             $scope.cars = data.data;
+            // if(data.count == 0)
+            //     $scope.cars = [];
+            console.log(data.data);
+            console.log($scope.cars);
             $scope.pagination.totalItems = data.count;
-            $scope.getCounts();
+           $scope.getCounts();
         });
     };
 
@@ -82,12 +109,12 @@ function DoneCtrl($scope, $filter, editableOptions, editableThemes, CarDoneServi
         $scope.opened[elementOpened] = !$scope.opened[elementOpened];
     };
 
-    CarDoneService.getLines().success(function (data, status) {
+    CarRequestService.getLines().success(function (data, status) {
         $scope.lines = data.data;
     });
 
     $scope.getConfigs = function (lineNo) {
-        CarDoneService.getConfig(lineNo).success(function (data, status) {
+        CarRequestService.getConfig(lineNo).success(function (data, status) {
             $scope.configs = data.data;
         });
     };
@@ -115,12 +142,14 @@ function DoneCtrl($scope, $filter, editableOptions, editableThemes, CarDoneServi
 
 
     $scope.showAddTime = function (car) {
+        if(car == null)
+            return;
         if ((typeof car.addTime == 'string') && car.addTime !== "") {
             var myDate = car.addTime.split('-');
             var year = myDate[0];
             var month = myDate[1];
             var day = myDate[2];
-            car.addTime = new Date(year, month - 1, day);
+            car.addTime = new Date(year, month, day);
         }
         return car.addTime;
 
@@ -178,6 +207,28 @@ function DoneCtrl($scope, $filter, editableOptions, editableThemes, CarDoneServi
             newData.addTime = $scope.formatDate(addTime);
         console.log(newData);
 
+    };
+
+    $scope.confirmRequest = function(id){
+        var m = confirm("是否确认请求？");
+        if(m===false) return;
+        CarRequestService.confirmRequest(id).success(function(data, status){
+            alert(status);
+            $scope.pageChanged();
+        }).error(function(data, status){
+            alert(status);
+        });
+    };
+
+    $scope.refuseRequest = function(id){
+        var m = confirm("是否拒绝请求？");
+        if(m===false) return;
+        CarRequestService.refuseRequest(id).success(function(data, status){
+            alert(status);
+            $scope.pageChanged();
+        }).error(function(data,status){
+            alert(status);
+        });
     };
 
 

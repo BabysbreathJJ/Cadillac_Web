@@ -5,6 +5,7 @@
     top: 0px;
     width: 100%;
     vertical-align: middle;
+    z-index: 9999;
 }
 
 .header .nav {
@@ -142,7 +143,7 @@
     padding-top: 15px;
 }
 
-.add-item {
+.add-item, .month-picker{
     display: inline-block;
     float: right;
     color: #8F001F;
@@ -202,6 +203,11 @@
 
 .table-btn {
     color: black;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
 }
 
 .table-btn:hover {
@@ -245,7 +251,9 @@
     text-align: right;
 }
 
-
+.month-picker{
+    width: 140px;
+}
 /*.selectedArea :first-of-type{*/
     /*background-color: #ac2925;*/
 /*}*/
