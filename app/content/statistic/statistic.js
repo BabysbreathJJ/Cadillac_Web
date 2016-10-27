@@ -11,8 +11,10 @@ angular.module('myApp.statistic', ['ui.router'])
         var getFilesRequest = function (param) {
             return $http({
                 method: 'POST',
-                url: BaseUrl + '/CarPlatform/cars/page/all?page=' + param,
-                crossDomain: true
+                url: BaseUrl + '/CarPlatform/orders/files',
+                //url: 'http://192.168.0.104:8080/CarPlatform/orders/files',
+                crossDomain: true,
+                data: param
             });
         };
 
@@ -22,7 +24,7 @@ angular.module('myApp.statistic', ['ui.router'])
             }
         }
     })
-    .controller('StatisticCtrl', function ($scope) {
+    .controller('StatisticCtrl', function ($scope, StatisticService, $filter, BaseUrl) {
         //datepicker (month picker)
         $scope.today = function () {
             $scope.startTime = new Date();
@@ -122,8 +124,32 @@ angular.module('myApp.statistic', ['ui.router'])
             return '';
         }
 
+        $scope.showInfo = true;
 
-        $scope.result = "请选择日期查询已发布信息!";
+        $scope.result = "请选择日期查询信息!";
+
+        $scope.search = function () {
+
+            if ($scope.startTime > $scope.endTime) {
+                alert("开始时间必须早于结束时间!");
+                return;
+            }
+            $scope.showInfo = true;
+            $scope.result = '正在查询结果,请耐心等待...';
+
+            var param = {
+                start: $filter('date')($scope.startTime, 'yyyy-MM-dd'),
+                end: $filter('date')($scope.endTime, 'yyyy-MM-dd')
+            };
+
+
+            StatisticService.getFiles(JSON.stringify(param)).success(function (data) {
+                $scope.showInfo = false;
+                $scope.name = data.name;
+                $scope.url = BaseUrl + '/CarPlatform' + data.url;
+                console.log(data);
+            });
+        };
 
 
     });

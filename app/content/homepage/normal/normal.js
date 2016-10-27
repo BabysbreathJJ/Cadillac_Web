@@ -180,12 +180,13 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
         $scope.cars.splice(index, 1);
         console.log($scope.cars);
         CarNormalService.deleteCar(id).success(function(data, status){
-            alert(status);
+            //alert(status);
             //$scope.getCounts();
             $scope.pageChanged();
         }).error(function(data,status){
-            alert(status);
+            //alert(status);
         });
+
         //    之后要和后台交互
     };
 

@@ -280,3 +280,34 @@
 .toolbar .form-control {
     padding: 6px 8px;
 }
+
+.bg-red {
+    background-color: #8F001F;
+    color: #ffffff;
+}
+
+.bg-red:hover {
+    color: #ffffff;
+}
+
+
+.bg-red:focus {
+    color: #ffffff;
+}
+
+.bg-red:active {
+    color: #ffffff;
+}
+
+.mg-top-30{
+    margin-top: 30px;
+}
+
+.result-info{
+    font-size: 17px;
+}
+
+.pd-right-30{
+    padding-right: 30px;
+}
+
