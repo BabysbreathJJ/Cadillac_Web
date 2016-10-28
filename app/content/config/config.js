@@ -155,7 +155,7 @@ function carlineFunc() {
         '<i class="ion-ios-plus-outline addIcon config-icon" ng-show="(!showConfig)&&edit" ng-transclude ng-click="toggle()"></i>' +
         '<i class="ion-chevron-left addIcon config-icon" ng-show="showConfig&&edit" ng-transclude ng-click="toggle()"></i>' +
         '</div>',
-        link: function (scope, element, attrs, containerController) {n 
+        link: function (scope, element, attrs, containerController) {
             scope.showConfig = false;
 
             console.log(scope.showConfig);
