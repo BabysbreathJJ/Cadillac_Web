@@ -68,6 +68,15 @@ function CarNormalService($http, BaseUrl) {
             headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
         });
     };
+
+    var getColors = function(id){
+        return $http({
+            method: 'GET',
+            url: BaseUrl + '/CarPlatform/configurations/' + id + '/colors',
+            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            crossDomain: true
+        });
+    };
     return {
         getCars: function (pageNo) {
             return getCarsRequest(pageNo);
@@ -86,6 +95,9 @@ function CarNormalService($http, BaseUrl) {
         },
         deleteCar: function(id){
             return deleteCar(id);
+        },
+        getColors: function(id){
+            return getColors(id);
         }
     }
 
@@ -109,6 +121,8 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
             if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
         return fmt;
     };
+
+    $scope.addnow = 0;
     $scope.smartTablePageSize = 10;
     $scope.pagination = {currentPage: 1};
 
@@ -142,6 +156,14 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
         });
     };
 
+    $scope.getColors = function(configId){
+        if(configId == null)
+            return;
+        CarNormalService.getColors(configId).success(function(data, status){
+            $scope.colors = data.data;
+        });
+    };
+
     $scope.editRow = function (rowform, lineId) {
         //$scope.clearConfigsColors();
         rowform.$show();
@@ -154,14 +176,7 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
         $scope.colors = [];
     };
 
-    $scope.colors = [
-        {name: '红'},
-        {name: '白'},
-        {name: '金'},
-        {name: '黑'},
-        {name: '粉'},
-        {name: '蓝'}
-    ];
+    
 
 
     $scope.showAddTime = function (car) {
@@ -192,6 +207,10 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
 
     $scope.addCar = function () {
         //$scope.clearConfigsColors();
+        if($scope.addnow === 1)
+            return;
+        $scope.addnow = 1;
+
         $scope.inserted = {
             id: null,
             name: '',
@@ -253,7 +272,7 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
         //     newData.addTime = $scope.formatDate(addTime);
         // console.log(newData);
         //alert('123');
-
+        $scope.addnow = 0;
         var d = {
             data: {
                 color: data['color.name'],
@@ -292,6 +311,7 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
 
     $scope.cancelAdding = function(index){
         console.log(index);
+        $scope.addnow = 0;
         $scope.cars.splice(index, 1);
     }
 

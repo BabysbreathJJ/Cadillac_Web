@@ -41,6 +41,7 @@
         <td class="data-td">
         <span editable-select="car.configuration.id" e-name="configuration.id" e-form="rowform"
               e-ng-options="configuration.id as configuration.name for configuration in configs"
+              e-ng-change="getColors($data)"
               onbeforesave="checkConfig($data)">
           <!--{{ showConfig(car) }}-->
             {{car.configuration.name || '未设置'}}
