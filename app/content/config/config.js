@@ -25,10 +25,13 @@ function containerFunc() {
         replace: true,
         transclude: true,
         template: '<div ng-transclude></div>',
-        controller: function () {
+        controller: function ($scope) {
             var carlines = [];
 
             var colors = [];
+
+            var tempConfig;
+
             this.gotConfigOpened = function (selectedCarline) {
                 if (selectedCarline == undefined) {
                     angular.forEach(carlines, function (carline) {
@@ -46,11 +49,16 @@ function containerFunc() {
                         }
                         else {
                             carline.showConfigs = selectedCarline.showConfig;
-                            console.log("macthed line id");
                             carline.$emit('configs', selectedCarline.lineid);
+                            tempConfig = carline;
                         }
                     });
                 }
+
+                $scope.colors = [];
+                $scope.$broadcast('showColor', false);
+                $scope.showColors = false;
+                $scope.$emit('showColors', false);
 
             };
 
@@ -61,6 +69,12 @@ function containerFunc() {
             this.addColor = function (color) {
                 colors.push(color);
             };
+
+            $scope.saveItem = function () {
+                tempConfig.showConfigs = false;
+                tempConfig.$broadcast('showConfig', false);
+            }
+
 
         }
     }
@@ -79,11 +93,13 @@ function configinfoFunc() {
                 scope.showColors = data;
             });
         },
-        controller: function () {
+        controller: function ($scope) {
             var configs = [];
             this.addConfig = function (config) {
                 configs.push(config);
             };
+
+            var tempConfig;
             this.gotColorOpened = function (selectedConfig) {
                 angular.forEach(configs, function (config) {
                     if (selectedConfig.configid != config.config.id) {
@@ -95,12 +111,14 @@ function configinfoFunc() {
                         config.showColors = selectedConfig.showColor;
                         config.$emit('showColors', selectedConfig.showColor);
                         config.$emit('colors', selectedConfig.configid);
+                        tempConfig = config;
                     }
                 });
             };
+
+
         }
     }
-
 }
 
 function configsFunc(ConfigInfoService) {
@@ -126,24 +144,32 @@ function carlineFunc() {
         scope: {
             linename: '=lineName',
             lineid: '=lineId',
-            carlineChecked: '=lineChecked'
+            carlineChecked: '=lineChecked',
+            edit: '=edit'
         },
         template: '<div class="col-md-3 col-xs-6">' +
         '<div class="checkbox" ng-show="edit">' +
         '<label class="custom-checkbox">' +
-        '<input type="checkbox"  ng-model="carlineChecked">' +
+        '<input type="checkbox"  ng-model="carlineChecked" ng-change="lineChange(carlineChecked,lineid)">' +
         '<span>{{linename}}</span></label> </div><span ng-show="!edit">{{linename}}</span>' +
         '<i class="ion-ios-plus-outline addIcon config-icon" ng-show="(!showConfig)&&edit" ng-transclude ng-click="toggle()"></i>' +
         '<i class="ion-chevron-left addIcon config-icon" ng-show="showConfig&&edit" ng-transclude ng-click="toggle()"></i>' +
         '</div>',
-        link: function (scope, element, attrs, containerController) {
+        link: function (scope, element, attrs, containerController) {n 
             scope.showConfig = false;
 
-            scope.$on('edit', function (d, data) {
-                scope.edit = data;
-                scope.showConfig = false;
-                containerController.gotConfigOpened(undefined);
-            });
+            console.log(scope.showConfig);
+            //scope.$on('edit', function (d, data) {
+            //    scope.edit = data;
+            //    scope.showConfig = false;
+            //    console.log(scope.edit);
+            //    containerController.gotConfigOpened(undefined);
+            //});
+
+            scope.lineChange = function (carlineChecked, lineId) {
+                var data = {id: lineId, flag: carlineChecked};
+                scope.$emit('lineChange', data);
+            };
 
             scope.$on('showConfig', function (d, data) {
                 scope.showConfig = data;
@@ -153,6 +179,8 @@ function carlineFunc() {
                 scope.showConfig = !scope.showConfig;
                 containerController.gotConfigOpened(scope);
             };
+
+
         }
     }
 }
@@ -172,7 +200,7 @@ function configFunc() {
         template: '<div class="config" ng-show="!showConfig">' +
         '<div class="checkbox">' +
         '<label class="custom-checkbox">' +
-        '<input type="checkbox"  ng-model="configChecked">' +
+        '<input type="checkbox"  ng-model="configChecked" ng-change="configChange(configChecked,configid)">' +
         '<span>{{configname}}</span></label> </div>' +
         '<i class="ion-ios-plus-outline config-icon" ng-show="!showColor" ng-transclude ng-click="toggle()"></i>' +
         '<i class="ion-chevron-left config-icon" ng-show="showColor" ng-transclude ng-click="toggle()"></i>' +
@@ -182,12 +210,15 @@ function configFunc() {
             scope.$on('showColor', function (d, data) {
                 scope.showColor = data;
             });
-            //scope.on('edit',function(d,data){
-            //    scope.showColor = data;
-            //});
+
             scope.toggle = function toggle() {
                 scope.showColor = !scope.showColor;
                 configinfoController.gotColorOpened(scope);
+            };
+
+            scope.configChange = function (configChecked, configId) {
+                var data = {id: configId, flag: configChecked};
+                scope.$emit('configChange', data);
             };
         }
     }
@@ -208,11 +239,15 @@ function colorFunc() {
         template: '<div class="color">' +
         '<div class="checkbox">' +
         '<label class="custom-checkbox">' +
-        '<input type="checkbox" id="checkboxWarning" ng-model="colorChecked">' +
+        '<input type="checkbox" id="checkboxWarning" ng-model="colorChecked" ng-change="colorChange(colorid,colorChecked)">' +
         '<span>{{colorname}}</span>' +
         '</label> </div>',
         link: function (scope, element, attrs, containerController) {
             containerController.addColor(scope);
+            scope.colorChange = function (id, flag) {
+                var data = {id: id, flag: flag};
+                scope.$emit('colorChange', data);
+            };
         }
     }
 }
@@ -221,79 +256,39 @@ function colorFunc() {
 //services
 function ConfigInfoService($http, BaseUrl) {
     var getLinesRequest = function () {
-        var lines = [{
-            name: 'XT5',
-            id: 1,
-            checked: true
-        }, {
-            name: 'CT6',
-            id: 2,
-            checked: false
-        }];
-        return lines;
+
+        return $http({
+            method: 'GET',
+            url: BaseUrl + '/CarPlatform/lines/all',
+            crossDomain: true
+        });
     };
 
     var getConfigsRequest = function (lineId) {
-        //return $http({
-        //    method: 'GET',
-        //    url: BaseUrl + '/CarPlatform/cars/search?page=' + pageNo,
-        //    crossDomain: true
-        //});
-        var configs = [{
-            name: '25T技术型',
-            id: 1,
-            checked: true
-        }, {
-            name: '25T豪华型',
-            id: 2,
-            checked: false
-        }, {
-            name: '25T豪华型',
-            id: 3,
-            checked: false
-        }, {
-            name: '25T豪华型',
-            id: 4,
-            checked: true
-        }, {
-            name: '25T豪华型',
-            id: 5,
-            checked: true
-        }, {
-            name: '25T豪华型',
-            id: 6,
-            checked: true
-        }];
-        //console.log("lineId is : " + lineId);
-        return configs;
+        return $http({
+            method: 'GET',
+            url: BaseUrl + '/CarPlatform/configurations/byline/all?line=' + lineId,
+            crossDomain: true
+        });
+
     };
 
     var getColorsRequest = function (configId) {
-        var colors = [{
-            name: '白色',
-            id: 1,
-            checked: true
-        }, {
-            name: '红色',
-            id: 2,
-            checked: false
-        }, {
-            name: '红色',
-            id: 3,
-            checked: false
-        }, {
-            name: '红色',
-            id: 4,
-            checked: true
-        }, {
-            name: '红色',
-            id: 5,
-            checked: true
-        }];
-        //console.log("configId is : "+ configId);
-        return colors;
+        return $http({
+            method: 'GET',
+            url: BaseUrl + '/CarPlatform/configurations/' + configId + '/allcolors',
+            crossDomain: true
+        });
     };
 
+    var updateConfigsRequest = function (params) {
+        return $http({
+            method: 'POST',
+            url: BaseUrl + '/CarPlatform/admin/config',
+            data: params,
+            crossDomain: true
+        });
+    };
 
     return {
         getLines: function () {
@@ -304,42 +299,110 @@ function ConfigInfoService($http, BaseUrl) {
         },
         getColors: function (configId) {
             return getColorsRequest(configId);
+        },
+        updateConfigs: function (params) {
+            return updateConfigsRequest(params);
         }
     }
 
 }
 
 //ctrl
-function ConfigInfoCtrl($scope, $filter, ConfigInfoService) {
+function ConfigInfoCtrl($scope, $filter, ConfigInfoService, $state, $stateParams) {
 
-    //ConfigInfoService.getLines().success(function(data){
-    //    $scope.lines = data.data;
-    //    console.log("test");
-    //});
 
-    $scope.lines = ConfigInfoService.getLines();
+    var submitLines = [];
+    var submitConfigs = [];
+    var submitColors = [];
 
-    $scope.$on('configs', function (d, data) {
+    var tempConfigs = [];
 
-        $scope.configs = ConfigInfoService.getConfigs(data);
+    var tempColors = [];
+
+
+    $scope.$on('configs', function (d, lineId) {
+        if (tempConfigs[lineId] == null || tempConfigs[lineId] == undefined) {
+
+            ConfigInfoService.getConfigs(lineId).success(function (data) {
+                $scope.configs = data.data;
+                tempConfigs[lineId] = data.data;
+            });
+        }
+        else
+            $scope.configs = tempConfigs[lineId];
 
     });
 
-    $scope.$on('colors', function (d, data) {
-        //console.log('colors start');
-        $scope.colors = ConfigInfoService.getColors(data);
+    $scope.$on('colors', function (d, configId) {
+        console.log(tempColors[configId]);
+        if (tempColors[configId] == null || tempColors[configId] == undefined) {
+            ConfigInfoService.getColors(configId).success(function (data) {
+                $scope.colors = data.data;
+                tempColors[configId] = data.data;
+            });
+        }
+        else {
+            $scope.colors = tempColors[configId];
+        }
+
+    });
+
+    ConfigInfoService.getLines().success(function (data) {
+        $scope.lines = data.data;
+        //$scope.initialData = angular.copy(data.data);
+    });
+
+    $scope.$on('lineChange', function (d, data) {
+        submitLines.push(data);
+    });
+
+    $scope.$on('configChange', function (d, data) {
+        submitConfigs.push(data);
+    });
+
+    $scope.$on('colorChange', function (d, data) {
+        submitColors.push(data);
     });
 
     $scope.edit = false;
 
     $scope.startEdit = function () {
         $scope.edit = true;
-        $scope.$broadcast('edit', true);
+        //$scope.$broadcast('edit', true);
     };
 
+
     $scope.cancelEdit = function () {
-        $scope.edit = false;
-        $scope.$broadcast('edit', false);
+
+
+        submitLines = [];
+        submitConfigs = [];
+        submitColors = [];
+
+        tempConfigs = [];
+
+        tempColors = [];
+        ConfigInfoService.getLines().success(function (data) {
+            $scope.lines = data.data;
+            $scope.edit = true;
+        });
+
+
+
+    };
+
+
+    $scope.updateConfig = function () {
+        console.log(submitLines);
+        console.log(submitConfigs);
+        console.log(submitColors);
+        var params = {line: submitLines, configuration: submitConfigs, color: submitColors};
+        console.log(params);
+        ConfigInfoService.updateConfigs(JSON.stringify(params)).success(function (data) {
+            $scope.edit = false;
+            $scope.$broadcast('edit', false);
+            alert("提交成功!");
+        });
     };
 
 
