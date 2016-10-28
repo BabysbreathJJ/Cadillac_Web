@@ -159,12 +159,12 @@ function carlineFunc() {
             scope.showConfig = false;
 
             console.log(scope.showConfig);
-            //scope.$on('edit', function (d, data) {
-            //    scope.edit = data;
-            //    scope.showConfig = false;
-            //    console.log(scope.edit);
-            //    containerController.gotConfigOpened(undefined);
-            //});
+            scope.$on('edit', function (d, data) {
+                scope.edit = data;
+                scope.showConfig = false;
+                console.log(scope.edit);
+                containerController.gotConfigOpened(undefined);
+            });
 
             scope.lineChange = function (carlineChecked, lineId) {
                 var data = {id: lineId, flag: carlineChecked};
