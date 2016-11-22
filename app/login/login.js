@@ -54,7 +54,11 @@ angular.module('myApp.login', ['ui.router'])
                     return;
                 }
                 window.localStorage.setItem("authorization", data.authorization);
-                $state.go('content.homepage.total');
+                window.localStorage.setItem("type", data.type);
+                if(data.type === 0)
+                    $state.go('content.homepage.total');
+                else if(data.type === 3)
+                    $state.go('content.config');
             }).error(function(data, status){
                 alert("连接失败");
             });
