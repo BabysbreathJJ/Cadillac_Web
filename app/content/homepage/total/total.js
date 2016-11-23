@@ -20,7 +20,7 @@ function CarConfigService($http, BaseUrl) {
         return $http({
             method: 'GET',
             url: BaseUrl + '/CarPlatform/cars/page/all?page=' + pageNo,
-            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            headers: {Authorization: window.localStorage.getItem("authorization")},
             crossDomain: true
         });
     };
@@ -45,7 +45,7 @@ function CarConfigService($http, BaseUrl) {
         return $http({
             method: 'POST',
             url: BaseUrl + '/CarPlatform/cars',
-            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            headers: {Authorization: window.localStorage.getItem("authorization")},
             crossDomain: true,
             data: data
         });
@@ -55,7 +55,7 @@ function CarConfigService($http, BaseUrl) {
         return $http({
             method:'PATCH',
             url: BaseUrl + '/CarPlatform/cars/' + id,
-            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            headers: {Authorization: window.localStorage.getItem("authorization")},
             data: data
         });
     };
@@ -64,7 +64,7 @@ function CarConfigService($http, BaseUrl) {
         return $http({
             method: 'DELETE',
             url: BaseUrl + '/CarPlatform/cars/' + id,
-            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            headers: {Authorization: window.localStorage.getItem("authorization")},
         });
     };
     return {

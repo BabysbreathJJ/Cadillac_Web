@@ -21,7 +21,7 @@ function CarNormalService($http, BaseUrl) {
         return $http({
             method: 'GET',
             url: BaseUrl + '/CarPlatform/cars/page/normal?page=' + pageNo,
-            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            headers: {Authorization: window.localStorage.getItem("authorization")},
             crossDomain: true
         });
     };
@@ -46,7 +46,7 @@ function CarNormalService($http, BaseUrl) {
         return $http({
             method: 'POST',
             url: BaseUrl + '/CarPlatform/cars',
-            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            headers: {Authorization: window.localStorage.getItem("authorization")},
             crossDomain: true,
             data: data
         });
@@ -56,7 +56,7 @@ function CarNormalService($http, BaseUrl) {
         return $http({
             method:'PATCH',
             url: BaseUrl + '/CarPlatform/cars/' + id,
-            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            headers: {Authorization: window.localStorage.getItem("authorization")},
             data: data
         });
     };
@@ -65,7 +65,7 @@ function CarNormalService($http, BaseUrl) {
         return $http({
             method: 'DELETE',
             url: BaseUrl + '/CarPlatform/cars/' + id,
-            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            headers: {Authorization: window.localStorage.getItem("authorization")},
         });
     };
 
@@ -73,7 +73,7 @@ function CarNormalService($http, BaseUrl) {
         return $http({
             method: 'GET',
             url: BaseUrl + '/CarPlatform/configurations/' + id + '/colors',
-            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            headers: {Authorization: window.localStorage.getItem("authorization")},
             crossDomain: true
         });
     };

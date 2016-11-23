@@ -21,7 +21,7 @@ function CarDoneService($http, BaseUrl) {
         return $http({
             method: 'GET',
             url: BaseUrl + '/CarPlatform/cars/page/finished?page=' + pageNo,
-            headers: {Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRlYWxlciIsImlhdCI6MTQ3NjE1MTc5MTg1M30.g-A_CRjPy3pkQJFfAVHPhRc1SH-Cu1DyR4OhhorP-eA'},
+            headers: {Authorization: window.localStorage.getItem("authorization")},
             crossDomain: true
         });
     };
