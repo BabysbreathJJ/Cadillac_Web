@@ -1,0 +1,48 @@
+<style>
+    /*.input-group-btn{
+        top:8px;
+    }*/
+
+    /*    .input-group .form-control{
+            margin-top: 15px;
+        }
+    */</style>
+<div class="add-item" ng-click="addLine()">
+    <div class="add-icon ion-ios-plus-outline display-block"></div>
+    <span class="add-text display-block">新增</span>
+</div>
+<table class="data table" style="text-align: center;">
+    <tr class="table-header">
+        <th class="data-th" width="30">序号</th>
+        <th class="data-th" width="30%">车系</th>
+        <th class="data-th" width="40%">操作</th>
+    </tr>
+    <tr ng-repeat="line in lines" class="editable-row">
+        <td class="data-td">
+            {{$index+1}}
+        </td>
+        <td class="data-td">
+            <span editable-text="line.name" e-name="line.name" e-form="rowform" e-required
+                  onbeforesave="checkLineId($data)">
+          {{line.name || '未设置'  }}
+        </span>
+        </td>
+
+        <td class="data-td">
+            <form editable-form name="rowform" onbeforesave="saveLine($data)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == line">
+                <button type="submit" ng-disabled="rowform.$waiting"
+                        class="table-btn  editable-table-button">
+                    保存
+                </button>
+                <a ng-if="car.id == null" e-form="rowAddForm rowEditForm" type="button"
+                   ng-disabled="rowform.$waiting" ng-click="cancelAdding($index)"
+                   class="table-btn  editable-table-button">
+                    取消
+                </a>
+            </form>
+            <div class="buttons" ng-show="!rowform.$visible">
+                <a class="table-btn  editable-table-button" ng-click="removeLine($index, line.id)">删除</a>
+            </div>
+        </td>
+    </tr>
+</table>

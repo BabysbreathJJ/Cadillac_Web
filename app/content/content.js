@@ -165,6 +165,67 @@ angular.module('myApp.content', ['ui.router'])
                     }]
                 }
             })
+            .state('content.management', {
+                url: '/management',
+                templateUrl: 'content/management/management.html',
+                controller: 'ManagementCtrl',
+                resolve: {
+                    loadManagementFiles: ["$ocLazyLoad", "loadContentFiles", function ($ocLazyLoad, loadContentFiles) {
+                        return $ocLazyLoad.load({
+                            name: 'management',
+                            files: [
+                                'content/management/management.js'
+                            ]
+                        });
+                    }]
+                }
+            })
+            .state('content.management.line', {
+                url: '/management/line',
+                templateUrl: 'content/management/line/line.html',
+                controller: 'LineCtrl',
+                resolve: {
+                    loadLineFiles: ["$ocLazyLoad", "loadManagementFiles", function ($ocLazyLoad, loadManagementFiles) {
+                        return $ocLazyLoad.load({
+                            name: 'line',
+                            files: [
+                                'content/management/line/line.js'
+                            ]
+                        });
+                    }]
+                }
+            })
+            .state('content.management.config', {
+                url: '/management/config',
+                templateUrl: 'content/management/config/config.html',
+                controller: 'ConfigCtrl',
+                resolve: {
+                    loadConfigFiles: ["$ocLazyLoad", "loadManagementFiles", function ($ocLazyLoad, loadManagementFiles) {
+                        return $ocLazyLoad.load({
+                            name: 'config',
+                            files: [
+                                'content/management/config/config.js'
+                            ]
+                        });
+                    }]
+                }
+            })
+            .state('content.management.color', {
+                url: '/management/color',
+                templateUrl: 'content/management/color/color.html',
+                controller: 'ColorCtrl',
+                resolve: {
+                    loadLineFiles: ["$ocLazyLoad", "loadManagementFiles", function ($ocLazyLoad, loadManagementFiles) {
+                        return $ocLazyLoad.load({
+                            name: 'color',
+                            files: [
+                                'content/management/color/color.js'
+                            ]
+                        });
+                    }]
+                }
+            })
+
             //.state('content.statistic.publish', {
             //    url: '/publish',
             //    templateUrl: 'content/statistic/publish/publish.html',

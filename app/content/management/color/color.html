@@ -1,0 +1,72 @@
+<style>
+    /*.input-group-btn{
+        top:8px;
+    }*/
+
+    /*    .input-group .form-control{
+            margin-top: 15px;
+        }
+    */</style>
+
+<div class="add-item" ng-click="addColor()">
+    <div class="add-icon ion-ios-plus-outline display-block"></div>
+    <span class="add-text display-block">新增</span>
+</div>
+<div class="form-horizontal">
+    <div class="form-group">
+        <label for="line" class="col-sm-4 control-label  text-right">选择车系</label>
+        <div class="col-sm-4">
+            <select class="form-control" id="line" ng-model="selectedLine"
+                    ng-options="option.name for option in lines track by option.id" ng-change="updateConfigs()">
+            </select>
+        </div>
+        <div class="col-sm-4"></div>
+    </div>
+    <div class="form-group">
+        <label for="config" class="col-sm-4 control-label text-right">选择配置</label>
+        <div class="col-sm-4">
+            <select class="form-control" id="config" ng-model="selectedConfig"
+                    ng-options="option.name for option in configs track by option.id" ng-change="updateColors()">
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn login-btn bg-red" ng-click="queryColors()">查询</button>
+        </div>
+    </div>
+</div>
+<table class="data table" style="text-align: center;">
+    <tr class="table-header">
+        <th class="data-th" width="30">序号</th>
+        <th class="data-th" width="30%">颜色</th>
+        <th class="data-th" width="40%">操作</th>
+    </tr>
+    <tr ng-repeat="color in colors" class="editable-row">
+        <td class="data-td">
+            {{$index+1}}
+        </td>
+        <td class="data-td">
+            <span editable-text="color.name" e-name="color.name" e-form="rowform" e-required
+                  onbeforesave="checkColorId($data)">
+          {{color.name || '未设置'  }}
+        </span>
+        </td>
+
+        <td class="data-td">
+            <form editable-form name="rowform" onbeforesave="saveColor($data)" ng-show="rowform.$visible"
+                  class="form-buttons form-inline" shown="inserted == color">
+                <button type="submit" ng-disabled="rowform.$waiting"
+                        class="table-btn  editable-table-button">
+                    保存
+                </button>
+                <a ng-if="color.id == null" e-form="rowAddForm rowEditForm" type="button"
+                   ng-disabled="rowform.$waiting" ng-click="cancelAdding($index)"
+                   class="table-btn  editable-table-button">
+                    取消
+                </a>
+            </form>
+            <div class="buttons" ng-show="!rowform.$visible">
+                <a class="table-btn  editable-table-button" ng-click="removeColor($index, color.id)">删除</a>
+            </div>
+        </td>
+    </tr>
+</table>
