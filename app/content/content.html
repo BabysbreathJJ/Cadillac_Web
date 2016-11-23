@@ -1,9 +1,9 @@
 <div class="header">
     <div class="nav">
-        <a ui-sref="content.homepage.total" ui-sref-active="nav-active" class="a-text">首页</a>
-        <a ui-sref="content.config" ui-sref-active="nav-active" class="a-text">配置</a>
-        <a ui-sref="content.statistic" ui-sref-active="nav-active" class="a-text">统计</a>
-        <a ui-sref="content.management.line" ui-sref-active="nav-active" class="a-text">管理</a>
+        <a ui-sref="content.homepage.total" ui-sref-active="nav-active" class="a-text" ng-show='showTab == 0'>首页</a>
+        <a ui-sref="content.config" ui-sref-active="nav-active" class="a-text" ng-show="showTab == 3">配置</a>
+        <a ui-sref="content.statistic" ui-sref-active="nav-active" class="a-text" ng-show="showTab == 3">统计</a>
+        <a ui-sref="content.management.line" ui-sref-active="nav-active" class="a-text" ng-show="showTab == 3">>管理</a>
     </div>
 </div>
 <div ui-view class="sys-func"></div>

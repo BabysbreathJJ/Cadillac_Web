@@ -244,6 +244,7 @@ angular.module('myApp.content', ['ui.router'])
 
 
     }])
-    .controller('ContentCtrl', function () {
-
+    .controller('ContentCtrl', function ($scope) {
+        $scope.showTab = window.localStorage.getItem("type");
+        console.log("tab" + $scope.showTab);
     });
