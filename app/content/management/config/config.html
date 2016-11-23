@@ -1,0 +1,62 @@
+<style>
+    /*.input-group-btn{
+        top:8px;
+    }*/
+
+    /*    .input-group .form-control{
+            margin-top: 15px;
+        }
+    */</style>
+<div class="add-item" ng-click="addConfig()">
+    <div class="add-icon ion-ios-plus-outline display-block"></div>
+    <span class="add-text display-block">新增</span>
+</div>
+<div class="form-group">
+    <label for="line" class="col-sm-4 control-label line-height-34 text-right">选择车系</label>
+    <div class="col-sm-4">
+        <select class="form-control" id="line" ng-model="selectedLine"
+                ng-options="option.name for option in lines track by option.id" ng-change="updateConfigs()">
+        </select>
+    </div>
+    <div class="col-sm-2">
+        <button class="btn login-btn bg-red" ng-click="queryByLine()">查询</button>
+    </div>
+</div>
+
+
+<table class="data table" style="text-align: center;">
+    <tr class="table-header">
+        <th class="data-th" width="30">序号</th>
+        <th class="data-th" width="30%">配置</th>
+        <th class="data-th" width="40%">操作</th>
+    </tr>
+    <tr ng-repeat="config in configs" class="editable-row">
+        <td class="data-td">
+            {{$index+1}}
+        </td>
+        <td class="data-td">
+            <span editable-text="config.name" e-name="config.name" e-form="rowform" e-required
+                  onbeforesave="checkConfigId($data)">
+          {{config.name || '未设置'  }}
+        </span>
+        </td>
+
+        <td class="data-td">
+            <form editable-form name="rowform" onbeforesave="saveConfig($data)" ng-show="rowform.$visible"
+                  class="form-buttons form-inline" shown="inserted == config">
+                <button type="submit" ng-disabled="rowform.$waiting"
+                        class="table-btn  editable-table-button">
+                    保存
+                </button>
+                <a ng-if="config.id == null" e-form="rowAddForm rowEditForm" type="button"
+                   ng-disabled="rowform.$waiting" ng-click="cancelAdding($index)"
+                   class="table-btn  editable-table-button">
+                    取消
+                </a>
+            </form>
+            <div class="buttons" ng-show="!rowform.$visible">
+                <a class="table-btn  editable-table-button" ng-click="removeConfig($index, config.id)">删除</a>
+            </div>
+        </td>
+    </tr>
+</table>
