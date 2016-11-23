@@ -244,7 +244,11 @@ angular.module('myApp.content', ['ui.router'])
 
 
     }])
-    .controller('ContentCtrl', function ($scope) {
+    .controller('ContentCtrl', function ($scope, $state) {
         $scope.showTab = window.localStorage.getItem("type");
         console.log("tab" + $scope.showTab);
+        if(window.localStorage.getItem('type') == undefined || window.localStorage.getItem('authorization') == undefined)
+        {
+            $state.go('login');
+        }
     });
