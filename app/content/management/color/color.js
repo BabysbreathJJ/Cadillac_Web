@@ -85,13 +85,47 @@ function ColorService($http, BaseUrl) {
 
 
 /** @ngInject */
-function ColorCtrl($scope, $filter, editableOptions, editableThemes, ColorService) {
+function ColorCtrl($scope, $filter, editableOptions, editableThemes, ColorService, $uibModal, $document) {
 
+    var parentElem = angular.element($document[0].querySelector('.data'));
+    $scope.colors = [];
+
+    $scope.openWnd = function (index, id) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'deleteInfo.html',
+            size: 'sm',
+            appendTo: parentElem,
+            windowClass: 'center-modal',
+            resolve: {
+                colors: function () {
+                    return $scope.colors;
+                }
+            },
+            controller: function ($scope, colors, ColorService, $uibModalInstance) {
+                $scope.deleteItem = function () {
+                    colors.splice(index, 1);
+                    ColorService.deleteColor(id).success(function (data, status) {
+                        $uibModalInstance.dismiss();
+                    }).error(function (data, status) {
+                        //alert(status);
+                    });
+
+                };
+
+                $scope.cancelDelete = function () {
+                    $uibModalInstance.dismiss('cancel');
+                };
+            }
+        });
+    };
 
     $scope.addnow = 0;
 
 
     $scope.opened = {};
+
+    $scope.showAdd = false;
 
     $scope.open = function ($event, elementOpened) {
         $event.preventDefault();
@@ -119,11 +153,16 @@ function ColorCtrl($scope, $filter, editableOptions, editableThemes, ColorServic
             return;
         ColorService.getColor(configId).success(function (data, status) {
             $scope.colors = data.data;
+            if($scope.colors.length == 0)
+            {
+                alert("所查询的信息为空!");
+            }
         });
     };
 
 
     $scope.queryColors = function () {
+        $scope.showAdd = true;
         $scope.getColors($scope.selectedConfig.id);
     };
 
@@ -131,11 +170,13 @@ function ColorCtrl($scope, $filter, editableOptions, editableThemes, ColorServic
 
         $scope.configs = [];
         $scope.colors = [];
+        $scope.showAdd = false;
         $scope.getConfigs($scope.selectedLine.id);
     };
 
     $scope.updateColors = function(){
         $scope.colors = [];
+        $scope.showAdd = false;
     };
 
     $scope.editRow = function (rowform, lineId) {
@@ -207,7 +248,7 @@ function ColorCtrl($scope, $filter, editableOptions, editableThemes, ColorServic
     $scope.cancelAdding = function (index) {
         console.log(index);
         $scope.addnow = 0;
-        $scope.configs.splice(index, 1);
+        $scope.colors.splice(index, 1);
     };
 
 

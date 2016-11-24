@@ -105,7 +105,43 @@ function CarNormalService($http, BaseUrl) {
 
 
 /** @ngInject */
-function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalService) {
+function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalService, $document, $uibModal) {
+
+    var parentElem = angular.element($document[0].querySelector('.data'));
+    $scope.cars = [];
+
+    $scope.openWnd = function (index, id) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'deleteInfo.html',
+            size: 'sm',
+            appendTo: parentElem,
+            windowClass: 'center-modal',
+            resolve: {
+                cars: function () {
+                    return $scope.cars;
+                }
+            },
+            controller: function ($scope, cars, CarNormalService, $uibModalInstance) {
+
+                $scope.deleteItem = function () {
+                    cars.splice(index, 1);
+                    CarNormalService.deleteCar(id).success(function (data, status) {
+                        $uibModalInstance.dismiss();
+                    }).error(function (data, status) {
+                        //alert(status);
+                    });
+
+                };
+
+                $scope.cancelDelete = function () {
+                    $uibModalInstance.dismiss('cancel');
+                };
+            }
+        });
+    };
+
+
     Date.prototype.Format = function(fmt) { //author: meizz 
         var o = {
             "M+": this.getMonth() + 1, //月份 

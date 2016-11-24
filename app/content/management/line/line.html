@@ -41,7 +41,8 @@
                 </a>
             </form>
             <div class="buttons" ng-show="!rowform.$visible">
-                <a class="table-btn  editable-table-button" ng-click="removeLine($index, line.id)">删除</a>
+                <!--<a class="table-btn  editable-table-button" ng-click="removeLine($index, line.id)">删除</a>-->
+                <a class="table-btn  editable-table-button" ng-click="openWnd($index, line.id)">删除</a>
             </div>
         </td>
     </tr>

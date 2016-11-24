@@ -7,7 +7,7 @@
             margin-top: 15px;
         }
     */</style>
-<div class="add-item" ng-click="addConfig()">
+<div class="add-item" ng-click="addConfig()" ng-show="showAdd">
     <div class="add-icon ion-ios-plus-outline display-block"></div>
     <span class="add-text display-block">新增</span>
 </div>
@@ -55,7 +55,7 @@
                 </a>
             </form>
             <div class="buttons" ng-show="!rowform.$visible">
-                <a class="table-btn  editable-table-button" ng-click="removeConfig($index, config.id)">删除</a>
+                <a class="table-btn  editable-table-button" ng-click="openWnd($index, config.id)">删除</a>
             </div>
         </td>
     </tr>

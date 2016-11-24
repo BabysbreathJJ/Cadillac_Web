@@ -59,7 +59,43 @@ function LineService($http, BaseUrl) {
 
 
 /** @ngInject */
-function LineCtrl($scope, $filter, editableOptions, editableThemes, LineService) {
+function LineCtrl($scope, $filter, editableOptions, editableThemes, LineService, $uibModal, $document) {
+
+    var parentElem = angular.element($document[0].querySelector('.data'));
+    $scope.lines = [];
+
+    $scope.openWnd = function (index, id) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'deleteInfo.html',
+            size: 'sm',
+            appendTo: parentElem,
+            windowClass: 'center-modal',
+            resolve: {
+                lines: function () {
+                    return $scope.lines;
+                }
+            },
+            controller: function ($scope, lines, LineService, $uibModalInstance) {
+                $scope.deleteItem = function () {
+                    console.log(lines);
+                    lines.splice(index, 1);
+                    console.log(lines);
+                    console.log(id);
+                    LineService.deleteLine(id).success(function (data, status) {
+                        $uibModalInstance.dismiss();
+                    }).error(function (data, status) {
+                        //alert(status);
+                    });
+
+                };
+
+                $scope.cancelDelete = function () {
+                    $uibModalInstance.dismiss('cancel');
+                };
+            }
+        });
+    };
 
 
     $scope.addnow = 0;
@@ -75,14 +111,13 @@ function LineCtrl($scope, $filter, editableOptions, editableThemes, LineService)
     };
 
 
-    $scope.getLines = function(){
+    $scope.getLines = function () {
         LineService.getLines().success(function (data, status) {
             $scope.lines = data.data;
         });
     };
 
     $scope.getLines();
-
 
 
     $scope.removeLine = function (index, id) {

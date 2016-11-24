@@ -71,12 +71,48 @@ function ConfigService($http, BaseUrl) {
 
 
 /** @ngInject */
-function ConfigCtrl($scope, $filter, editableOptions, editableThemes, ConfigService) {
+function ConfigCtrl($scope, $filter, editableOptions, editableThemes, ConfigService, $document, $uibModal) {
+
+    var parentElem = angular.element($document[0].querySelector('.data'));
+    $scope.configs = [];
+
+    $scope.openWnd = function (index, id) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'deleteInfo.html',
+            size: 'sm',
+            appendTo: parentElem,
+            windowClass: 'center-modal',
+            resolve: {
+                configs: function () {
+                    return $scope.configs;
+                }
+            },
+            controller: function ($scope, configs, ConfigService, $uibModalInstance) {
+                $scope.deleteItem = function () {
+                    configs.splice(index, 1);
+
+                    ConfigService.deleteConfig(id).success(function (data, status) {
+                        $uibModalInstance.dismiss();
+                    }).error(function (data, status) {
+                        //alert(status);
+                    });
+
+                };
+
+                $scope.cancelDelete = function () {
+                    $uibModalInstance.dismiss('cancel');
+                };
+            }
+        });
+    };
 
 
     $scope.addnow = 0;
 
     $scope.opened = {};
+
+    $scope.showAdd = false;
 
     $scope.open = function ($event, elementOpened) {
         $event.preventDefault();
@@ -117,6 +153,7 @@ function ConfigCtrl($scope, $filter, editableOptions, editableThemes, ConfigServ
 
     $scope.queryByLine = function () {
         $scope.getConfigs($scope.selectedLine.id);
+        $scope.showAdd = true;
     };
 
     $scope.addConfig = function () {
@@ -124,7 +161,7 @@ function ConfigCtrl($scope, $filter, editableOptions, editableThemes, ConfigServ
         if ($scope.addnow === 1)
             return;
 
-        if($scope.configs == undefined){
+        if ($scope.configs == undefined) {
             alert("请选择一个车系进行查询后添加!");
             return;
         }
@@ -143,8 +180,9 @@ function ConfigCtrl($scope, $filter, editableOptions, editableThemes, ConfigServ
             return "车系不能为空!";
     };
 
-    $scope.updateConfigs = function(){
+    $scope.updateConfigs = function () {
         $scope.configs = [];
+        $scope.showAdd = false;
     };
 
 
@@ -179,7 +217,6 @@ function ConfigCtrl($scope, $filter, editableOptions, editableThemes, ConfigServ
     editableOptions.theme = 'bs3';
     editableThemes['bs3'].submitTpl = '<button type="submit" class="btn btn-primary btn-with-icon"><i class="ion-checkmark-round"></i></button>';
     editableThemes['bs3'].cancelTpl = '<button type="button" ng-click="$form.$cancel()" class="btn btn-default btn-with-icon"><i class="ion-close-round"></i></button>';
-
 
 
 }
