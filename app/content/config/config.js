@@ -382,9 +382,10 @@ function ConfigInfoCtrl($scope, $filter, ConfigInfoService, $state, $stateParams
         tempConfigs = [];
 
         tempColors = [];
+        $scope.edit = false;
         ConfigInfoService.getLines().success(function (data) {
             $scope.lines = data.data;
-            $scope.edit = true;
+
         });
 
 
