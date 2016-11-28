@@ -30,7 +30,8 @@ function containerFunc() {
 
             var colors = [];
 
-            var tempConfig;
+            var configs = [];
+
 
             this.gotConfigOpened = function (selectedCarline) {
                 if (selectedCarline == undefined) {
@@ -50,7 +51,7 @@ function containerFunc() {
                         else {
                             carline.showConfigs = selectedCarline.showConfig;
                             carline.$emit('configs', selectedCarline.lineid);
-                            tempConfig = carline;
+                            //tempConfig = carline;
                         }
                     });
                 }
@@ -62,18 +63,39 @@ function containerFunc() {
 
             };
 
+            this.gotColorOpened = function (selectedConfig) {
+                angular.forEach(configs, function (config) {
+                    if (selectedConfig.configid != config.config.id) {
+                        config.$broadcast('showColor', false);
+                        config.showColors = false;
+                        config.$emit('showColors', false);
+                    }
+                    else {
+                        config.showColors = selectedConfig.showColor;
+                        config.$emit('showColors', selectedConfig.showColor);
+                        config.$emit('colors', selectedConfig.configid);
+                        //tempConfig = config;
+                    }
+                });
+            };
+
             this.addCarLine = function (carline) {
                 carlines.push(carline);
+            };
+
+            this.addConfig = function (config) {
+                configs.push(config);
             };
 
             this.addColor = function (color) {
                 colors.push(color);
             };
 
-            $scope.saveItem = function () {
-                tempConfig.showConfigs = false;
-                tempConfig.$broadcast('showConfig', false);
-            }
+            //注释by ljj
+            //$scope.saveItem = function () {
+            //    tempConfig.showConfigs = false;
+            //    tempConfig.$broadcast('showConfig', false);
+            //}
 
 
         }
@@ -93,47 +115,34 @@ function configinfoFunc() {
                 scope.showColors = data;
             });
         },
-        controller: function ($scope) {
-            var configs = [];
-            this.addConfig = function (config) {
-                configs.push(config);
-            };
+        //controller: function () {
+        //var configs = [];
+        //this.addConfig = function (config) {
+        //    configs.push(config);
+        //};
+        //
+        //var tempConfig;
+        //this.gotColorOpened = function (selectedConfig) {
+        //    angular.forEach(configs, function (config) {
+        //        if (selectedConfig.configid != config.config.id) {
+        //            config.$broadcast('showColor', false);
+        //            config.showColors = false;
+        //            config.$emit('showColors', false);
+        //        }
+        //        else {
+        //            config.showColors = selectedConfig.showColor;
+        //            config.$emit('showColors', selectedConfig.showColor);
+        //            config.$emit('colors', selectedConfig.configid);
+        //            tempConfig = config;
+        //        }
+        //    });
+        //};
 
-            var tempConfig;
-            this.gotColorOpened = function (selectedConfig) {
-                angular.forEach(configs, function (config) {
-                    if (selectedConfig.configid != config.config.id) {
-                        config.$broadcast('showColor', false);
-                        config.showColors = false;
-                        config.$emit('showColors', false);
-                    }
-                    else {
-                        config.showColors = selectedConfig.showColor;
-                        config.$emit('showColors', selectedConfig.showColor);
-                        config.$emit('colors', selectedConfig.configid);
-                        tempConfig = config;
-                    }
-                });
-            };
 
-
-        }
+        //}
     }
 }
 
-function configsFunc(ConfigInfoService) {
-    return {
-        restrict: 'EA',
-        replace: true,
-        transclude: true,
-        require: '^?configinfo',
-        template: '<div class="row configinfo" ng-transclude></div>',
-        link: function (scope, element, attrs, configinfoController) {
-            configinfoController.addConfig(scope);
-        }
-    }
-
-}
 
 function carlineFunc() {
     return {
@@ -162,7 +171,6 @@ function carlineFunc() {
             scope.$on('edit', function (d, data) {
                 scope.edit = data;
                 scope.showConfig = false;
-                console.log(scope.edit);
                 containerController.gotConfigOpened(undefined);
             });
 
@@ -185,19 +193,33 @@ function carlineFunc() {
     }
 }
 
+function configsFunc() {
+    return {
+        restrict: 'EA',
+        replace: true,
+        transclude: true,
+        require: '^?container',
+        template: '<div class="row configinfo" ng-transclude></div>',
+        link: function (scope, element, attrs, containerController) {
+            containerController.addConfig(scope);
+        }
+    }
+
+}
+
 function configFunc() {
     return {
         restrict: 'EA',
         replace: true,
         transclude: true,
-        require: '^?configinfo',
+        require: '^?container',
         scope: {
             configname: '=configName',
             configid: '=configId',
             carlineid: '=carlineId',
             configChecked: '=configChecked'
         },
-        template: '<div class="config" ng-show="!showConfig">' +
+        template: '<div class="config">' +
         '<div class="checkbox">' +
         '<label class="custom-checkbox">' +
         '<input type="checkbox"  ng-model="configChecked" ng-change="configChange(configChecked,configid)">' +
@@ -205,7 +227,7 @@ function configFunc() {
         '<i class="ion-ios-plus-outline config-icon" ng-show="!showColor" ng-transclude ng-click="toggle()"></i>' +
         '<i class="ion-chevron-left config-icon" ng-show="showColor" ng-transclude ng-click="toggle()"></i>' +
         '</div>',
-        link: function (scope, element, attrs, configinfoController) {
+        link: function (scope, element, attrs, containerController) {
             scope.showColor = false;
             scope.$on('showColor', function (d, data) {
                 scope.showColor = data;
@@ -213,7 +235,7 @@ function configFunc() {
 
             scope.toggle = function toggle() {
                 scope.showColor = !scope.showColor;
-                configinfoController.gotColorOpened(scope);
+                containerController.gotColorOpened(scope);
             };
 
             scope.configChange = function (configChecked, configId) {
@@ -321,6 +343,7 @@ function ConfigInfoCtrl($scope, $filter, ConfigInfoService, $state, $stateParams
 
 
     $scope.$on('configs', function (d, lineId) {
+        $scope.configs = [];
         if (tempConfigs[lineId] == null || tempConfigs[lineId] == undefined) {
 
             ConfigInfoService.getConfigs(lineId).success(function (data) {
@@ -334,7 +357,7 @@ function ConfigInfoCtrl($scope, $filter, ConfigInfoService, $state, $stateParams
     });
 
     $scope.$on('colors', function (d, configId) {
-        console.log(tempColors[configId]);
+        $scope.colors = [];
         if (tempColors[configId] == null || tempColors[configId] == undefined) {
             ConfigInfoService.getColors(configId).success(function (data) {
                 $scope.colors = data.data;
@@ -349,7 +372,6 @@ function ConfigInfoCtrl($scope, $filter, ConfigInfoService, $state, $stateParams
 
     ConfigInfoService.getLines().success(function (data) {
         $scope.lines = data.data;
-        //$scope.initialData = angular.copy(data.data);
     });
 
     $scope.$on('lineChange', function (d, data) {
@@ -367,8 +389,9 @@ function ConfigInfoCtrl($scope, $filter, ConfigInfoService, $state, $stateParams
     $scope.edit = false;
 
     $scope.startEdit = function () {
+
         $scope.edit = true;
-        //$scope.$broadcast('edit', true);
+        $scope.$broadcast('edit', true);
     };
 
 
@@ -383,22 +406,20 @@ function ConfigInfoCtrl($scope, $filter, ConfigInfoService, $state, $stateParams
 
         tempColors = [];
         $scope.edit = false;
+        $scope.$broadcast('edit', false);
+        $scope.$broadcast('showColor', false);
+        $scope.$broadcast('showConfig', false);
         ConfigInfoService.getLines().success(function (data) {
             $scope.lines = data.data;
 
         });
 
 
-
     };
 
 
     $scope.updateConfig = function () {
-        console.log(submitLines);
-        console.log(submitConfigs);
-        console.log(submitColors);
         var params = {line: submitLines, configuration: submitConfigs, color: submitColors};
-        console.log(params);
         ConfigInfoService.updateConfigs(JSON.stringify(params)).success(function (data) {
             $scope.edit = false;
             $scope.$broadcast('edit', false);

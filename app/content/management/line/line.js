@@ -181,7 +181,7 @@ function LineCtrl($scope, $filter, editableOptions, editableThemes, LineService,
     $scope.cancelAdding = function (index) {
         console.log(index);
         $scope.addnow = 0;
-        $scope.cars.splice(index, 1);
+        $scope.lines.splice(index, 1);
     };
 
 
