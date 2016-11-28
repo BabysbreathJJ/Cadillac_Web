@@ -30,7 +30,7 @@
 }
 
 .login-background {
-    background: url("login/login.jpg") no-repeat fixed left top;
+    background: url("login/background.jpeg") no-repeat fixed left top;
     background-size: cover;
     color: white;
 }
