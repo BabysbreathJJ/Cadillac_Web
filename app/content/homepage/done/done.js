@@ -197,5 +197,18 @@ function DoneCtrl($scope, $filter, editableOptions, editableThemes, CarDoneServi
     $scope.pageChanged = function () {
         $scope.getCars($scope.pagination.currentPage);
     };
+    $scope.getReport = function(report){
+        if(report === 1)
+            return "是";
+        else return "否";
+    };
+
+    $scope.getType = function(type){
+        if(type === 0)
+            return '良好';
+        else if(type === 1)
+            return '一般';
+        else return '差';
+    };
 
 }
