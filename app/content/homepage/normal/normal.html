@@ -14,13 +14,16 @@
 <table class="data table" style="text-align: center;">
     <tr class="table-header">
         <th class="data-th" width="6%">序号</th>
-        <th class="data-th" width="15%">车辆编号</th>
-        <th class="data-th" width="10%">车系</th>
-        <th class="data-th" width="17%">配置</th>
+        <th class="data-th" width="12%">车辆编号</th>
+        <th class="data-th" width="8%">车系</th>
+        <th class="data-th" width="15%">配置</th>
         <th class="data-th" width="6%">颜色</th>
         <th class="data-th" width="17%">入库时间</th>
-        <th class="data-th" width="9%">定价</th>
-        <th class="data-th" width="15%">操作</th>
+
+        <th class="data-th" width="8%">是否上报</th>
+        <th class="data-th" width="8%">车况</th>
+        <th class="data-th" width="8%">定价</th>
+        <th class="data-th" width="11%">操作</th>
     </tr>
     <tr ng-repeat="car in cars" class="editable-row">
         <td class="data-td">
@@ -58,6 +61,18 @@
               e-datepicker-popup="yyyy-MM-dd" editable-bsdate="car.addTime"
               e-is-open="opened.$data" e-ng-click="open($event,'$data')" onbeforesave="checkAddTime($data)">
           {{(showAddTime(car) | date:'yyyy-MM-dd') || '未设置' }}
+        </span>
+        </td>
+        <td class="data-td">
+        <span editable-select="car.reported" e-name="report.id" e-form="rowform"
+              e-ng-options="report.id as report.name for report in reports" onbeforesave="checkReport($data)">
+          {{ getReport(car.reported) || '未设置'}}
+        </span>
+        </td>
+        <td class="data-td">
+        <span editable-select="car.type" e-name="type.id" e-form="rowform"
+              e-ng-options="type.id as type.name for type in types" onbeforesave="checkType($data)">
+          {{ getType(car.type) || '未设置'}}
         </span>
         </td>
         <td class="data-td" style="padding-left: 10px">

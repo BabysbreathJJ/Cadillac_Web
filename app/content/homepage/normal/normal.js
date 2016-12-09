@@ -43,6 +43,7 @@ function CarNormalService($http, BaseUrl) {
     };
 
     var postCar = function(data) {
+        console.log(data);
         return $http({
             method: 'POST',
             url: BaseUrl + '/CarPlatform/cars',
@@ -315,6 +316,8 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
                 price: data.number,
 
                 addTime: data.addTime.Format('yyyy-MM-dd'),
+                reported: data['report.id'],
+                type: data['type.id'],
                 line:{
                     id: data['line.id']
                 },
@@ -323,6 +326,7 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
                 }
             }
         };
+        //console.log('d:' + d.data);
         if(id == null){
             CarNormalService.postCar(JSON.stringify(d)).success(function(data, status){
                 $scope.getCars($scope.pagination.currentPage);
@@ -367,6 +371,36 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
 
     $scope.pageChanged = function () {
         $scope.getCars($scope.pagination.currentPage);
+    };
+    $scope.reports = [
+        { name: '是', id:1 },
+        { name : '否', id:0 }
+    ];
+    $scope.types = [
+        {name: '良好', id : 0},
+        {name: '一般', id : 1},
+        {name: '差', id : 2}
+    ];
+    $scope.checkReport = function(data){
+        if (data == null)
+            return "上报不能为空!";
+    };
+    $scope.checkType = function(data){
+        if (data == null)
+            return "车况不能为空!";
+    };
+    $scope.getReport = function(report){
+        if(report === 1)
+            return "是";
+        else return "否";
+    };
+
+    $scope.getType = function(type){
+        if(type === 0)
+            return '良好';
+        else if(type === 1)
+            return '一般';
+        else return '差';
     };
 
 }
