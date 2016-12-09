@@ -5,11 +5,11 @@
 'use strict';
 
 angular.module('myApp.management')
-    .controller('ConfigCtrl', ConfigCtrl)
-    .factory('ConfigService', ConfigService);
+    .controller('ConfigManagementCtrl', ConfigManagementCtrl)
+    .factory('ConfigManagementService', ConfigManagementService);
 
 
-function ConfigService($http, BaseUrl) {
+function ConfigManagementService($http, BaseUrl) {
 
 
     var getLinesRequest = function () {
@@ -71,7 +71,7 @@ function ConfigService($http, BaseUrl) {
 
 
 /** @ngInject */
-function ConfigCtrl($scope, $filter, editableOptions, editableThemes, ConfigService, $document, $uibModal) {
+function ConfigManagementCtrl($scope, $filter, editableOptions, editableThemes, ConfigManagementService, $document, $uibModal) {
 
     var parentElem = angular.element($document[0].querySelector('.data'));
     $scope.configs = [];
@@ -88,11 +88,11 @@ function ConfigCtrl($scope, $filter, editableOptions, editableThemes, ConfigServ
                     return $scope.configs;
                 }
             },
-            controller: function ($scope, configs, ConfigService, $uibModalInstance) {
+            controller: function ($scope, configs, ConfigManagementService, $uibModalInstance) {
                 $scope.deleteItem = function () {
                     configs.splice(index, 1);
 
-                    ConfigService.deleteConfig(id).success(function (data, status) {
+                    ConfigManagementService.deleteConfig(id).success(function (data, status) {
                         $uibModalInstance.dismiss();
                     }).error(function (data, status) {
                         //alert(status);
@@ -121,15 +121,20 @@ function ConfigCtrl($scope, $filter, editableOptions, editableThemes, ConfigServ
         $scope.opened[elementOpened] = !$scope.opened[elementOpened];
     };
 
-    ConfigService.getLines().success(function (data, status) {
+    ConfigManagementService.getLines().success(function (data, status) {
         $scope.lines = data.data;
         $scope.selectedLine = $scope.lines[0];
+        console.log($scope.selectedLine);
         //$scope.getConfigs($scope.selectedLine.id);
     });
 
     $scope.getConfigs = function (lineNo) {
-        ConfigService.getConfig(lineNo).success(function (data, status) {
+        ConfigManagementService.getConfig(lineNo).success(function (data, status) {
             $scope.configs = data.data;
+            if($scope.configs.length == 0)
+            {
+                alert("所查询的信息为空!");
+            }
         });
     };
 
@@ -143,7 +148,7 @@ function ConfigCtrl($scope, $filter, editableOptions, editableThemes, ConfigServ
     $scope.removeConfig = function (index, id) {
         $scope.configs.splice(index, 1);
         console.log($scope.lines);
-        ConfigService.deleteConfig(id).success(function (data, status) {
+        ConfigManagementService.deleteConfig(id).success(function (data, status) {
         }).error(function (data, status) {
             //alert(status);
         });
@@ -198,7 +203,7 @@ function ConfigCtrl($scope, $filter, editableOptions, editableThemes, ConfigServ
             }
 
         };
-        ConfigService.postConfig(JSON.stringify(d)).success(function (data, status) {
+        ConfigManagementService.postConfig(JSON.stringify(d)).success(function (data, status) {
             $scope.getConfigs($scope.selectedLine.id);
         }).error(function (data, stauts) {
             alert('添加失败');

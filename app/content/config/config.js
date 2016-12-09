@@ -74,7 +74,7 @@ function containerFunc() {
                         config.showColors = selectedConfig.showColor;
                         config.$emit('showColors', selectedConfig.showColor);
                         config.$emit('colors', selectedConfig.configid);
-                        //tempConfig = config;
+                        //tempConfig = configManagement;
                     }
                 });
             };
@@ -117,23 +117,23 @@ function configinfoFunc() {
         },
         //controller: function () {
         //var configs = [];
-        //this.addConfig = function (config) {
-        //    configs.push(config);
+        //this.addConfig = function (configManagement) {
+        //    configs.push(configManagement);
         //};
         //
         //var tempConfig;
         //this.gotColorOpened = function (selectedConfig) {
-        //    angular.forEach(configs, function (config) {
-        //        if (selectedConfig.configid != config.config.id) {
-        //            config.$broadcast('showColor', false);
-        //            config.showColors = false;
-        //            config.$emit('showColors', false);
+        //    angular.forEach(configs, function (configManagement) {
+        //        if (selectedConfig.configid != configManagement.configManagement.id) {
+        //            configManagement.$broadcast('showColor', false);
+        //            configManagement.showColors = false;
+        //            configManagement.$emit('showColors', false);
         //        }
         //        else {
-        //            config.showColors = selectedConfig.showColor;
-        //            config.$emit('showColors', selectedConfig.showColor);
-        //            config.$emit('colors', selectedConfig.configid);
-        //            tempConfig = config;
+        //            configManagement.showColors = selectedConfig.showColor;
+        //            configManagement.$emit('showColors', selectedConfig.showColor);
+        //            configManagement.$emit('colors', selectedConfig.configid);
+        //            tempConfig = configManagement;
         //        }
         //    });
         //};
@@ -161,8 +161,8 @@ function carlineFunc() {
         '<label class="custom-checkbox">' +
         '<input type="checkbox"  ng-model="carlineChecked" ng-change="lineChange(carlineChecked,lineid)">' +
         '<span>{{linename}}</span></label> </div><span ng-show="!edit">{{linename}}</span>' +
-        '<i class="ion-ios-plus-outline addIcon config-icon" ng-show="(!showConfig)&&edit" ng-transclude ng-click="toggle()"></i>' +
-        '<i class="ion-chevron-left addIcon config-icon" ng-show="showConfig&&edit" ng-transclude ng-click="toggle()"></i>' +
+        '<i class="ion-ios-plus-outline addIcon configManagement-icon" ng-show="(!showConfig)&&edit" ng-transclude ng-click="toggle()"></i>' +
+        '<i class="ion-chevron-left addIcon configManagement-icon" ng-show="showConfig&&edit" ng-transclude ng-click="toggle()"></i>' +
         '</div>',
         link: function (scope, element, attrs, containerController) {
             scope.showConfig = false;
@@ -219,13 +219,13 @@ function configFunc() {
             carlineid: '=carlineId',
             configChecked: '=configChecked'
         },
-        template: '<div class="config">' +
+        template: '<div class="configManagement">' +
         '<div class="checkbox">' +
         '<label class="custom-checkbox">' +
         '<input type="checkbox"  ng-model="configChecked" ng-change="configChange(configChecked,configid)">' +
         '<span>{{configname}}</span></label> </div>' +
-        '<i class="ion-ios-plus-outline config-icon" ng-show="!showColor" ng-transclude ng-click="toggle()"></i>' +
-        '<i class="ion-chevron-left config-icon" ng-show="showColor" ng-transclude ng-click="toggle()"></i>' +
+        '<i class="ion-ios-plus-outline configManagement-icon" ng-show="!showColor" ng-transclude ng-click="toggle()"></i>' +
+        '<i class="ion-chevron-left configManagement-icon" ng-show="showColor" ng-transclude ng-click="toggle()"></i>' +
         '</div>',
         link: function (scope, element, attrs, containerController) {
             scope.showColor = false;
@@ -306,7 +306,7 @@ function ConfigInfoService($http, BaseUrl) {
     var updateConfigsRequest = function (params) {
         return $http({
             method: 'POST',
-            url: BaseUrl + '/CarPlatform/admin/config',
+            url: BaseUrl + '/CarPlatform/admin/configManagement',
             data: params,
             crossDomain: true
         });
@@ -392,6 +392,7 @@ function ConfigInfoCtrl($scope, $filter, ConfigInfoService, $state, $stateParams
 
         $scope.edit = true;
         $scope.$broadcast('edit', true);
+        console.log("test by ljj" + $scope.edit);
     };
 
 

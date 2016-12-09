@@ -181,7 +181,7 @@ angular.module('myApp.content', ['ui.router'])
                 }
             })
             .state('content.management.line', {
-                url: '/management/line',
+                url: '/line',
                 templateUrl: 'content/management/line/line.html',
                 controller: 'LineCtrl',
                 resolve: {
@@ -195,23 +195,23 @@ angular.module('myApp.content', ['ui.router'])
                     }]
                 }
             })
-            .state('content.management.config', {
-                url: '/management/config',
-                templateUrl: 'content/management/config/config.html',
-                controller: 'ConfigCtrl',
+            .state('content.management.configManagement', {
+                url: '/configManagement',
+                templateUrl: 'content/management/configManagement/configManagement.html',
+                controller: 'ConfigManagementCtrl',
                 resolve: {
-                    loadConfigFiles: ["$ocLazyLoad", "loadManagementFiles", function ($ocLazyLoad, loadManagementFiles) {
+                    loadConfigManagementFiles: ["$ocLazyLoad", "loadManagementFiles", function ($ocLazyLoad, loadManagementFiles) {
                         return $ocLazyLoad.load({
-                            name: 'config',
+                            name: 'configManagement',
                             files: [
-                                'content/management/config/config.js'
+                                'content/management/configManagement/configManagement.js'
                             ]
                         });
                     }]
                 }
             })
             .state('content.management.color', {
-                url: '/management/color',
+                url: '/color',
                 templateUrl: 'content/management/color/color.html',
                 controller: 'ColorCtrl',
                 resolve: {

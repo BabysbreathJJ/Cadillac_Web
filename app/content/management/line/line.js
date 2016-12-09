@@ -114,6 +114,10 @@ function LineCtrl($scope, $filter, editableOptions, editableThemes, LineService,
     $scope.getLines = function () {
         LineService.getLines().success(function (data, status) {
             $scope.lines = data.data;
+            if($scope.lines.length == 0)
+            {
+                alert("所查询的信息为空!");
+            }
         });
     };
 
