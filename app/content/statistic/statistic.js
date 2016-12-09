@@ -147,7 +147,6 @@ angular.module('myApp.statistic', ['ui.router'])
                 $scope.showInfo = false;
                 $scope.name = data.name;
                 $scope.url = BaseUrl + '/CarPlatform' + data.url;
-                console.log(data);
             });
         };
 

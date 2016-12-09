@@ -43,7 +43,6 @@ function CarNormalService($http, BaseUrl) {
     };
 
     var postCar = function(data) {
-        console.log(data);
         return $http({
             method: 'POST',
             url: BaseUrl + '/CarPlatform/cars',
@@ -230,7 +229,6 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
 
     $scope.removeCar = function (index, id) {
         $scope.cars.splice(index, 1);
-        console.log($scope.cars);
         CarNormalService.deleteCar(id).success(function(data, status){
             //alert(status);
             //$scope.getCounts();
@@ -302,13 +300,7 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
 
     $scope.saveCar = function(data, id) {
 
-        // var addTime = data.addTime;
-        // console.log("addTime: " + addTime);
-        // var newData = data;
-        // if (addTime !== '' && addTime !== null)
-        //     newData.addTime = $scope.formatDate(addTime);
-        // console.log(newData);
-        //alert('123');
+
         $scope.addnow = 0;
         var d = {
             data: {
@@ -326,7 +318,6 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
                 }
             }
         };
-        //console.log('d:' + d.data);
         if(id == null){
             CarNormalService.postCar(JSON.stringify(d)).success(function(data, status){
                 $scope.getCars($scope.pagination.currentPage);
@@ -350,10 +341,9 @@ function NormalCtrl($scope, $filter, editableOptions, editableThemes, CarNormalS
     };
 
     $scope.cancelAdding = function(index){
-        console.log(index);
         $scope.addnow = 0;
         $scope.cars.splice(index, 1);
-    }
+    };
 
 
     editableOptions.theme = 'bs3';

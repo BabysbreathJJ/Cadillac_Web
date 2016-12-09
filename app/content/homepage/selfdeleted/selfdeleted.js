@@ -172,11 +172,9 @@ function SelfDeletedCtrl($scope, $filter, editableOptions, editableThemes, CarSe
     $scope.saveCar = function (data) {
 
         var addTime = data.addTime;
-        console.log("addTime: " + addTime);
         var newData = data;
         if (addTime !== '' && addTime !== null)
             newData.addTime = $scope.formatDate(addTime);
-        console.log(newData);
 
     };
 

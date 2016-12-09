@@ -88,10 +88,7 @@ function RequestCtrl($scope, $filter, editableOptions, editableThemes, CarReques
     $scope.getCars = function (pageNo) {
         CarRequestService.getCars(pageNo).success(function (data, status) {
             $scope.cars = data.data;
-            // if(data.count == 0)
-            //     $scope.cars = [];
-            console.log(data.data);
-            console.log($scope.cars);
+
             $scope.pagination.totalItems = data.count;
            $scope.getCounts();
         });
@@ -201,11 +198,9 @@ function RequestCtrl($scope, $filter, editableOptions, editableThemes, CarReques
     $scope.saveCar = function (data) {
 
         var addTime = data.addTime;
-        console.log("addTime: " + addTime);
         var newData = data;
         if (addTime !== '' && addTime !== null)
             newData.addTime = $scope.formatDate(addTime);
-        console.log(newData);
 
     };
 
@@ -213,10 +208,9 @@ function RequestCtrl($scope, $filter, editableOptions, editableThemes, CarReques
         var m = confirm("是否确认请求？");
         if(m===false) return;
         CarRequestService.confirmRequest(id).success(function(data, status){
-            alert(status);
             $scope.pageChanged();
         }).error(function(data, status){
-            alert(status);
+            alert("网络访问出错,请刷新页面重试!");
         });
     };
 
@@ -224,10 +218,9 @@ function RequestCtrl($scope, $filter, editableOptions, editableThemes, CarReques
         var m = confirm("是否拒绝请求？");
         if(m===false) return;
         CarRequestService.refuseRequest(id).success(function(data, status){
-            alert(status);
             $scope.pageChanged();
         }).error(function(data,status){
-            alert(status);
+            alert("网络访问出错,请刷新页面重试!");
         });
     };
 

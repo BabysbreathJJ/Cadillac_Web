@@ -78,10 +78,7 @@ function LineCtrl($scope, $filter, editableOptions, editableThemes, LineService,
             },
             controller: function ($scope, lines, LineService, $uibModalInstance) {
                 $scope.deleteItem = function () {
-                    console.log(lines);
                     lines.splice(index, 1);
-                    console.log(lines);
-                    console.log(id);
                     LineService.deleteLine(id).success(function (data, status) {
                         $uibModalInstance.dismiss();
                     }).error(function (data, status) {
@@ -126,8 +123,6 @@ function LineCtrl($scope, $filter, editableOptions, editableThemes, LineService,
 
     $scope.removeLine = function (index, id) {
         $scope.lines.splice(index, 1);
-        console.log($scope.lines);
-        console.log(id);
         LineService.deleteLine(id).success(function (data, status) {
             //alert(status);
             //$scope.getCounts();
@@ -161,7 +156,6 @@ function LineCtrl($scope, $filter, editableOptions, editableThemes, LineService,
 
     $scope.saveLine = function (lineData) {
 
-        console.log(lineData["line.name"]);
 
         $scope.addnow = 0;
         var d = {
@@ -170,7 +164,6 @@ function LineCtrl($scope, $filter, editableOptions, editableThemes, LineService,
             }
         };
 
-        console.log(d);
 
 
         LineService.postLine(JSON.stringify(d)).success(function (data, status) {
@@ -183,7 +176,6 @@ function LineCtrl($scope, $filter, editableOptions, editableThemes, LineService,
     };
 
     $scope.cancelAdding = function (index) {
-        console.log(index);
         $scope.addnow = 0;
         $scope.lines.splice(index, 1);
     };

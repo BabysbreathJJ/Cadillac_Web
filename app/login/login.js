@@ -48,7 +48,6 @@ angular.module('myApp.login', ['ui.router'])
                 crossDomain:true,
                 data:data
             }).success(function(data, status){
-                console.log(data);
                 if($.isEmptyObject(data)){
                     alert("用户名或密码错误");
                     return;

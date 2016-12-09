@@ -167,7 +167,6 @@ function carlineFunc() {
         link: function (scope, element, attrs, containerController) {
             scope.showConfig = false;
 
-            console.log(scope.showConfig);
             scope.$on('edit', function (d, data) {
                 scope.edit = data;
                 scope.showConfig = false;
@@ -392,7 +391,6 @@ function ConfigInfoCtrl($scope, $filter, ConfigInfoService, $state, $stateParams
 
         $scope.edit = true;
         $scope.$broadcast('edit', true);
-        console.log("test by ljj" + $scope.edit);
     };
 
 

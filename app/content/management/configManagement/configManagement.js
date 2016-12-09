@@ -124,8 +124,6 @@ function ConfigManagementCtrl($scope, $filter, editableOptions, editableThemes, 
     ConfigManagementService.getLines().success(function (data, status) {
         $scope.lines = data.data;
         $scope.selectedLine = $scope.lines[0];
-        console.log($scope.selectedLine);
-        //$scope.getConfigs($scope.selectedLine.id);
     });
 
     $scope.getConfigs = function (lineNo) {
@@ -147,7 +145,6 @@ function ConfigManagementCtrl($scope, $filter, editableOptions, editableThemes, 
 
     $scope.removeConfig = function (index, id) {
         $scope.configs.splice(index, 1);
-        console.log($scope.lines);
         ConfigManagementService.deleteConfig(id).success(function (data, status) {
         }).error(function (data, status) {
             //alert(status);
@@ -192,7 +189,6 @@ function ConfigManagementCtrl($scope, $filter, editableOptions, editableThemes, 
 
 
     $scope.saveConfig = function (data) {
-        console.log(data);
         $scope.addnow = 0;
         var d = {
             data: {
@@ -213,7 +209,6 @@ function ConfigManagementCtrl($scope, $filter, editableOptions, editableThemes, 
     };
 
     $scope.cancelAdding = function (index) {
-        console.log(index);
         $scope.addnow = 0;
         $scope.configs.splice(index, 1);
     };

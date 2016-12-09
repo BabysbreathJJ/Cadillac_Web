@@ -187,7 +187,6 @@ function ColorCtrl($scope, $filter, editableOptions, editableThemes, ColorServic
 
     $scope.removeColor = function (index, id) {
         $scope.colors.splice(index, 1);
-        console.log($scope.colors);
         ColorService.deleteColor(id).success(function (data, status) {
             //alert(status);
             //$scope.getCounts();
@@ -246,7 +245,6 @@ function ColorCtrl($scope, $filter, editableOptions, editableThemes, ColorServic
     };
 
     $scope.cancelAdding = function (index) {
-        console.log(index);
         $scope.addnow = 0;
         $scope.colors.splice(index, 1);
     };

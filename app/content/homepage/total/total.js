@@ -180,7 +180,6 @@ function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSe
     $scope.removeCar = function(index, id) {
         //$scope.clearConfigsColors();
         $scope.cars.splice(index, 1);
-        console.log($scope.cars);
         CarConfigService.deleteCar(id).success(function(data, status){
             alert(status);
             
@@ -247,14 +246,6 @@ function TotalCtrl($scope, $filter, editableOptions, editableThemes, CarConfigSe
     };
 
     $scope.saveCar = function(data, id) {
-
-        // var addTime = data.addTime;
-        // console.log("addTime: " + addTime);
-        // var newData = data;
-        // if (addTime !== '' && addTime !== null)
-        //     newData.addTime = $scope.formatDate(addTime);
-        // console.log(newData);
-        //alert('123');
 
         var d = {
             data: {
