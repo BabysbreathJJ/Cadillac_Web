@@ -224,23 +224,7 @@ angular.module('myApp.content', ['ui.router'])
                         });
                     }]
                 }
-            })
-
-            //.state('content.statistic.publish', {
-            //    url: '/publish',
-            //    templateUrl: 'content/statistic/publish/publish.html',
-            //    controller: 'PublishCtrl',
-            //    resolve: {
-            //        loadStatisticFiles: ["$ocLazyLoad", "loadStatisticFiles", function ($ocLazyLoad, loadStatisticFiles) {
-            //            return $ocLazyLoad.load({
-            //                name: 'publish',
-            //                files: [
-            //                    'content/statistic/publish/publish.js'
-            //                ]
-            //            });
-            //        }]
-            //    }
-            //});
+            });
 
 
     }])
