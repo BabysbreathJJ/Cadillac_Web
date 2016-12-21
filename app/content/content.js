@@ -2,7 +2,10 @@
  * Created by Lijingjing on 16/9/12.
  */
 'use strict';
-
+ // (function (){
+ //    if(window.localStorage.getItem("authorization")==null)
+ //        location.href = "#!/login";
+ // })();
 angular.module('myApp.content', ['ui.router'])
     .config(['$locationProvider', '$stateProvider', '$urlRouterProvider', function ($locationProvider, $stateProvider, $urlRouterProvider) {
 
@@ -234,4 +237,9 @@ angular.module('myApp.content', ['ui.router'])
         {
             $state.go('login');
         }
+        $scope.logout = function(){
+            window.localStorage.removeItem('type');
+            window.localStorage.removeItem('authorization');
+            $state.go('login');
+        };
     });

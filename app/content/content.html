@@ -4,6 +4,8 @@
         <a ui-sref="content.config" ui-sref-active="nav-active" class="a-text" ng-show="showTab == 3">配置</a>
         <a ui-sref="content.statistic" ui-sref-active="nav-active" class="a-text" ng-show="showTab == 3">统计</a>
         <a ui-sref="content.management.line" ui-sref-active="nav-active" class="a-text" ng-show="showTab == 3">管理</a>
+
+        <a type="button" ng-click="logout()" class="mdi mdi-logout mdi-light">登出</a>
     </div>
 </div>
 <div ui-view class="sys-func"></div>
